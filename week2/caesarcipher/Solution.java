@@ -1,4 +1,4 @@
-package week2.caeserchipher;
+package week2.caesarcipher;
 
 import java.io.*;
 import java.math.*;
