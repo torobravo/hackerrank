@@ -25,11 +25,7 @@ class Result {
         Map<Character, Integer> charMap = new HashMap<>();
 
         for (char ch : s.toCharArray()) {
-            if (!charMap.containsKey(ch)) {
-                charMap.put(ch, 1);
-            } else {
-                charMap.put(ch, charMap.get(ch) + 1);
-            }
+            charMap.put(ch, charMap.getOrDefault(ch, 0) + 1);
         }
 
         int maxFreq = charMap.get(s.charAt(0));
