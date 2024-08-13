@@ -21,3 +21,15 @@ Given a time in 12-hour AM/PM format, convert it to military (24-hour) time.
 There is a collection of input strings and a collection of query strings. For each query string, determine how many times it occurs in the list of input strings. Return an array of the results. 
 
 [Java Solution](week1/sparsearray/Solution.java) |
+
+### [Lonely Integer](https://www.hackerrank.com/challenges/one-month-preparation-kit-lonely-integer/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-one)
+Given an array of integers, where all elements but one occur twice, find the unique element.
+
+[Java Solution](week1/lonlyinteger/Solution.java) |
+
+### [Flipping bits](https://www.hackerrank.com/challenges/one-month-preparation-kit-flipping-bits/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-one)
+You will be given a list of 32 bit unsigned integers. Flip all the bits (1->0 and 0->1 ) and return the result as an unsigned integer. 
+
+[Java Solution](week1/flippingbits/Solution.java) |
+
+
