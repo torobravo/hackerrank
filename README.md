@@ -186,11 +186,240 @@ Determine how many ways she can divide the chocolate.
 [Java Solution](week1/subarraydivision/Solution.java) |
 
 
-### [XOR Strings]()
+### [XOR Strings](https://www.hackerrank.com/challenges/one-month-preparation-kit-strings-xor/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-one)
+Given two strings consisting of digits 0 and 1 only, find the XOR of the two strings.
+
+```Java
+    public static String stringsXOR(String s, String t) {
+        String res = new String("");
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == t.charAt(i))
+                res += "0";
+            else
+                res += "1";
+        }
+        return res;
+    }
+```
+
+[Java Solution](week1/xorstrings/Solution.java) |
+
+### Mock Test
+
+#### [Find the median]
+The median of a list of numbers is essentially its middle element after sorting. The same number of
+elements occur after it as before. Given a list of numbers with an odd number of elements, find the median?
+
+```Java
+    public static int findMedian(List<Integer> arr) {
+        Collections.sort(arr);
+        int mid = arr.size() / 2;
+        return arr.get(mid);
+    }
+```
+
+#### [Flipping the Matrix]
+Sean invented a game involving a **2n x 2n** matrix where each cell of the matrix contains an integer. He
+can reverse any of its rows or columns any number of times. The goal of the game is to maximize the sum
+of the elements in the **n x n** submatrix located in the upper-left quadrant of the matrix.
+Given the initial configurations for **q** matrices, help Sean reverse the rows and columns of each matrix in the
+best possible way so that the sum of the elements in the matrix's upper-left quadrant is maximal.
+
+```Java
+    public static int flippingMatrix(List<List<Integer>> matrix) {
+        int totalSum = 0;
+        int size = matrix.size();
+        for (int i = 0; i < size / 2; i++) {
+            for (int j = 0; j < size / 2; j++) {
+                totalSum += Math.max(
+                    Math.max(matrix.get(i).get(j), matrix.get(i).get(size-1-j)),
+                    Math.max(matrix.get(size-1-i).get(j), matrix.get(size-1-i).get(size-1-j))
+                );
+            }
+        }
+        return totalSum;
+    }
+```
+
+## Week 2
+
+### [Sales by Match](https://www.hackerrank.com/challenges/one-month-preparation-kit-sock-merchant/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-two)
+There is a large pile of socks that must be paired by color. Given an array of integers representing the color of each sock, determine how many pairs of socks with matching colors there are.
+
+```Java
+    public static int sockMerchant(int n, List<Integer> ar) {
+        int pairs = 0;
+        Collections.sort(ar);
+        for (int i = 1; i < n; i++) {
+            if (ar.get(i) == ar.get(i - 1)) {
+                pairs++;
+                i++; // jump to next pair
+            }
+        }
+        return pairs;
+    }
+```
+
+[Java Solution](week2/salesbymatch/Solution.java) |
+
+### [Zig Zag Sequence](https://www.hackerrank.com/challenges/one-month-preparation-kit-zig-zag-sequence/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-two)
+In this challenge, the task is to debug the existing code to successfully execute all provided test files.
+Given an array of distinct integers, transform the array into a zig zag sequence by permuting the array elements. A sequence will be called a zig zag sequence if the first elements in the sequence are in increasing order and the last elements are in decreasing order, where *k=(n+1)/2* . You need to find the lexicographically smallest zig zag sequence of the given array.
+
+```Java
+    public static void findZigZagSequence(int[] a, int n) {
+        Arrays.sort(a);
+        int mid = (n) / 2; // Change 1
+        int temp = a[mid];
+        a[mid] = a[n - 1];
+        a[n - 1] = temp;
+
+        int st = mid + 1;
+        int ed = n - 2; // Change 2
+        while (st <= ed) {
+            temp = a[st];
+            a[st] = a[ed];
+            a[ed] = temp;
+            st = st + 1;
+            ed = ed - 1; // Change 3
+        }
+        for (int i = 0; i < n; i++) {
+            if (i > 0)
+                System.out.print(" ");
+            System.out.print(a[i]);
+        }
+        System.out.println();
+    }
+```
+
+[Java Solution](week2/zigzag/Main.java) |
+
+### [Drawing Book](https://www.hackerrank.com/challenges/one-month-preparation-kit-drawing-book/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-two)
+A teacher asks the class to open their books to a page number. A student can either start turning pages from the front of the book or from the back of the book. They always turn pages one at a time. When they open the book, page 1 is always on the right side:
+
+When they flip page 1, they see pages 2 and 3. Each page except the last page will always be printed on both sides. The last page may only be printed on the front, given the length of the book. If the book is n pages long, and a student wants to turn to page p, what is the minimum number of pages to turn? They can start at the beginning or the end of the book.
+
+Given n and p, find and print the minimum number of pages that must be turned in order to arrive at page p. 
+
+```Java
+    public static int pageCount(int n, int p) {
+        int front = p / 2;
+        int back = (n - p) / 2;
+        if (n % 2 == 0) // if even pages
+            back = (n + 1 - p) / 2; // add 1 page
+        return Math.min(front, back);
+    }
+```
+
+[Java Solution](week2/drawingbook/Solution.java) |
+
+
+### [Tower Breakers]()
+
 
 ```Java
 
 ```
 
 [Java Solution]() |
+
+
+### [Caesar Cipher]()
+
+
+```Java
+
+```
+
+[Java Solution]() |
+
+
+### [Max Min]()
+
+
+```Java
+
+```
+
+[Java Solution]() |
+
+
+### [Dynamic Array]()
+
+
+```Java
+
+```
+
+[Java Solution]() |
+
+
+### [Grid Challenge]()
+
+
+```Java
+
+```
+
+[Java Solution]() |
+
+
+### [Prime Dates]()
+
+
+```Java
+
+```
+
+[Java Solution]() |
+
+
+### [Sherlock and Array]()
+
+
+```Java
+
+```
+
+[Java Solution]() |
+
+
+### [Recursive Digit Sum]()
+
+
+```Java
+
+```
+
+[Java Solution]() |
+
+
+### [Counter game]()
+
+
+```Java
+
+```
+
+[Java Solution]() |
+
+
+### [Sum vs XOR]()
+
+
+```Java
+
+```
+
+[Java Solution]() |
+
+
+
+
+
+
+
+
+
+
 
