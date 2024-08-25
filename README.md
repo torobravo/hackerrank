@@ -749,8 +749,602 @@ characters to change to make the two substrings into anagrams of one another
         return s2.length();
     }
 ```
-
 [Java Solution](week2/mock/anagram/Solution.java)
+
+---
+## Week 3
+
+### [The Bomberman Game](https://www.hackerrank.com/challenges/one-month-preparation-kit-bomber-man/problem?h_l=interview&isFullScreen=true&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-three)
+Bomberman lives in a rectangular grid. Each cell in the grid either contains a bomb or nothing at all. Each bomb can be planted in any cell of the grid but once planted, it will detonate after exactly 3 seconds. Once a bomb detonates, it's destroyed — along with anything in its four neighboring cells. This means that if a bomb detonates in cell i,j any valid cells (i +/- 1,j) and (i,j +/- 1) are cleared. If there is a bomb in a neighboring cell, the neighboring bomb is destroyed without detonating, so there's no chain reaction.
+
+Bomberman is immune to bombs, so he can move freely throughout the grid. Here's what he does:
+
+1. Initially, Bomberman arbitrarily plants bombs in some of the cells, the initial state.
+2. After one second, Bomberman does nothing.
+3. After one more second, Bomberman plants bombs in all cells without bombs, thus filling the whole grid with bombs. No bombs detonate at this point.
+4. After one more second, any bombs planted exactly three seconds ago will detonate. Here, Bomberman stands back and observes.
+5. Bomberman then repeats steps 3 and 4 indefinitely.
+
+Note that during every second Bomberman plants bombs, the bombs are planted simultaneously (i.e., at the exact same moment), and any bombs planted at the same time will detonate at the same time.
+
+Given the initial configuration of the grid with the locations of Bomberman's first batch of planted bombs, determine the state of the grid after
+seconds.
+
+```Java
+    public static List<String> bomberMan(int n, List<String> grid) {
+        char BOMB = 'O', DOT = '.';
+        List<String> grid2 = new ArrayList<>();
+        String filledBombs = new String("");
+        for (int i = 0; i < grid.get(0).length(); i++) {
+            filledBombs += BOMB;
+        }
+
+        List<String> filled = new ArrayList<>();
+        for (int j = 0; j < grid.size(); j++) {
+            filled.add(filledBombs);
+        }
+
+        /*
+         * 4 possible states:
+         * 
+         * 1. Original grid (n = 1)
+         * 2. Full of bombs (n = 2, 4, 6...)
+         * 3. Detonate 1 time (n = 3, 7, 11...)
+         * 4. Detonate 2 times (n = 5, 9, 13...)
+         */
+
+        if (n == 1)
+            return grid;
+
+        if ((n % 2) == 0)
+            return filled;
+
+        int maxFlips = 1;
+        if (n % 4 == 1) // (n = 5, 9, 13...)
+            maxFlips = 2;
+
+        // original
+        grid2.addAll(grid);
+
+        while (maxFlips-- > 0) {
+            grid.clear();
+            grid.addAll(filled);
+            for (int y = 0; y < grid.size(); y++) {
+                for (int x = 0; x < grid.get(0).length(); x++) {
+                    if (grid2.get(y).charAt(x) == BOMB) {
+                        StringBuilder sb = new StringBuilder(grid.get(y));
+                        sb.setCharAt(x, DOT);
+                        grid.set(y, sb.toString());
+
+                        // up
+                        if (y > 0) {
+                            sb = new StringBuilder(grid.get(y - 1));
+                            sb.setCharAt(x, DOT);
+                            grid.set(y - 1, sb.toString());
+                        }
+                        // down
+                        if (y < grid2.size() - 1) {
+                            sb = new StringBuilder(grid.get(y + 1));
+                            sb.setCharAt(x, DOT);
+                            grid.set(y + 1, sb.toString());
+                        }
+                        // left
+                        if (x > 0) {
+                            sb = new StringBuilder(grid.get(y));
+                            sb.setCharAt(x - 1, DOT);
+                            grid.set(y, sb.toString());
+                        }
+                        // right
+                        if (x < grid.get(0).length() - 1) {
+                            sb = new StringBuilder(grid.get(y));
+                            sb.setCharAt(x + 1, DOT);
+                            grid.set(y, sb.toString());
+                        }
+                    }
+                }
+            }
+            grid2.clear();
+            grid2.addAll(grid);
+        }
+        return grid2;
+    }
+
+```
+
+[Java Solution](week3/bomberman/Solution.java) |
+
+---
+### [New Year Chaos](https://www.hackerrank.com/challenges/one-month-preparation-kit-new-year-chaos/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-three)
+It is New Year's Day and people are in line for the Wonderland rollercoaster ride. Each person wears a sticker indicating their initial position in the queue from 1 to n. Any person can bribe the person directly in front of them to swap positions, but they still wear their original sticker. One person can bribe at most two others.
+
+Determine the minimum number of bribes that took place to get to a given queue order. Print the number of bribes, or, if anyone has bribed more than two people, print Too chaotic.
+```Java
+    public static void minimumBribes(List<Integer> q) {
+        int swaps = 0;
+
+        for (int index = q.size() - 1; index > 0; index--) {
+            int rightValue = index + 1;
+            if (q.get(index) != rightValue) {
+                if (q.get(index - 1) == rightValue) {
+                    q.set(index - 1, q.get(index));
+                    q.set(index, rightValue);
+                    swaps += 1;
+                } else if (q.get(index - 2) == rightValue) {
+                    q.set(index - 2, q.get(index - 1));
+                    q.set(index - 1, q.get(index));
+                    q.set(index, rightValue);
+                    swaps += 2;
+                } else {
+                    System.out.println("Too chaotic");
+                    return;
+                }
+            }
+        }
+        System.out.println(swaps);
+    }
+```
+
+[Java Solution](week3/newyearchaos/Solution.java) |
+
+---
+### [Sherlock and the Valid String](https://www.hackerrank.com/challenges/one-month-preparation-kit-sherlock-and-valid-string/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-three)
+Sherlock considers a string to be valid if all characters of the string appear the same number of times. It is also valid if he can remove just 1 character at 1 index in the string, and the remaining characters will occur the same number of times. Given a string s, determine if it is valid. If so, return YES, otherwise return NO.
+```Java
+    public static String isValid(String s) {
+        Map<Character, Integer> charMap = new HashMap<>();
+
+        for (char ch : s.toCharArray()) {
+            charMap.put(ch, charMap.getOrDefault(ch, 0) + 1);
+        }
+
+        int maxFreq = charMap.get(s.charAt(0));
+        int remove = 0;
+
+        for (Integer val : charMap.values()) {
+            if (maxFreq != val) {
+                remove += 1;
+                if (remove > 1) {
+                    return "NO";
+                }
+            }
+
+        }
+        return "YES";
+    }
+```
+
+[Java Solution](week3/sherlockvalidstring/Solution.java) |
+
+---
+### [Climbing the Leaderboard](https://www.hackerrank.com/challenges/one-month-preparation-kit-climbing-the-leaderboard/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-three)
+An arcade game player wants to climb to the top of the leaderboard and track their ranking. The game uses Dense Ranking, so its leaderboard works like this:
+
+* The player with the highest score is ranked number 1 on the leaderboard.
+* Players who have equal scores receive the same ranking number, and the next player(s) receive the immediately following ranking number.
+```Java
+    public static List<Integer> climbingLeaderboard(List<Integer> ranked, List<Integer> player) {
+
+        List<Integer> result = new ArrayList<>();
+
+        // Convert ranked list to TreeSet to remove duplicates
+        // and sort in ascending order
+        Set<Integer> rankSet = new TreeSet<>(ranked);
+        int highestRank = rankSet.size();
+
+        // redefine ranked list with the sorted set
+        ranked = new ArrayList<>(rankSet);
+
+        for (Integer current : player) {
+            // do a fast binary search in the ranked list to find
+            // the insertion point of the currentplayer
+            int index = Collections.binarySearch(ranked, current);
+
+            // if the insertion point is found (aka positive index),
+            // the ordinary position of the current player will
+            // be located at the highestRank minus the insertion point
+            int ord = highestRank - index;
+
+            // if the insertion point is not found (aka negative index),
+            // insertion point = -insertPoint - 1
+            if (index < 0) {
+                // the ordinary position of the current player
+                // will be located at the highestRank minus the
+                // the insertion point:
+                // highestRank - (-insertPoint - 1) - 1
+                ord = highestRank + index + 2;
+            }
+            result.add(ord);
+        }
+
+        return result;
+    }
+```
+
+[Java Solution](week3/climbingleaderboard/Solution.java) |
+
+---
+### [Reverse a linked list](https://www.hackerrank.com/challenges/one-month-preparation-kit-reverse-a-linked-list/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-three)
+Given the pointer to the head node of a linked list, change the next pointers of the nodes so that their order is reversed. The head pointer given may be null meaning that the initial list is empty. 
+```Java
+    public static SinglyLinkedListNode reverse(SinglyLinkedListNode llist) {
+        SinglyLinkedListNode prevNode = null;
+        SinglyLinkedListNode currentNode = llist;
+
+        while (currentNode != null) {
+            SinglyLinkedListNode nextNode = currentNode.next;
+            currentNode.next = prevNode;
+            prevNode = currentNode;
+            currentNode = nextNode;
+        }
+        return prevNode;
+    }
+```
+
+[Java Solution](week3/reverselinkedlist/Solution.java) |
+
+---
+### [Reverse a doubly linked list](https://www.hackerrank.com/challenges/one-month-preparation-kit-reverse-a-doubly-linked-list/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-three)
+Given the pointer to the head node of a doubly linked list, reverse the order of the nodes in place. That is, change the next and prev pointers of the nodes so that the direction of the list is reversed. Return a reference to the head node of the reversed list. 
+```Java
+    public static DoublyLinkedListNode reverse(DoublyLinkedListNode llist) {
+        DoublyLinkedListNode prevNode = null;
+        DoublyLinkedListNode currentNode = llist;
+        DoublyLinkedListNode nextNode = null;
+
+        while (currentNode != null) {
+            // swap pointers
+            nextNode = currentNode.next;
+            currentNode.next = prevNode;
+            currentNode.prev = nextNode;
+            // save previous
+            prevNode = currentNode;
+            // move along
+            currentNode = nextNode;
+        }
+        return prevNode;
+    }
+```
+
+[Java Solution](week3/reversedoublylinkedlist/Solution.java) |
+
+---
+### [Insert a node at a specific position](https://www.hackerrank.com/challenges/one-month-preparation-kit-insert-a-node-at-a-specific-position-in-a-linked-list/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-three)
+Given the pointer to the head node of a linked list and an integer to insert at a certain position, create a new node with the given integer as its data attribute, insert this node at the desired position and return the head node.
+
+A position of 0 indicates head, a position of 1 indicates one node away from the head and so on. The head pointer given may be null meaning that the initial list is empty. 
+```Java
+    public static SinglyLinkedListNode insertNodeAtPosition(SinglyLinkedListNode llist, int data, int position) {
+        int index = 0;
+        SinglyLinkedListNode newNode = new SinglyLinkedListNode(data);
+        SinglyLinkedListNode currentNode = llist;
+        SinglyLinkedListNode previousNode = null;
+
+        while (index++ != position) {
+            previousNode = currentNode;
+            currentNode = currentNode.next;
+        }
+
+        if (previousNode == null)
+            return newNode;
+
+        newNode.next = currentNode;
+        previousNode.next = newNode;
+
+        return llist;
+    }
+```
+
+[Java Solution](week3/insertlinkedlist/Solution.java) |
+
+---
+### [Merge two sorted linked lists](https://www.hackerrank.com/challenges/one-month-preparation-kit-merge-two-sorted-linked-lists/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-three)
+Given pointers to the heads of two sorted linked lists, merge them into a single, sorted linked list. Either head pointer may be null meaning that the corresponding list is empty.
+```Java
+    static SinglyLinkedListNode mergeLists(SinglyLinkedListNode head1, SinglyLinkedListNode head2) {
+        SinglyLinkedListNode pt1 = head1;
+        SinglyLinkedListNode pt2 = head2;
+        SinglyLinkedListNode merged = new SinglyLinkedListNode(-1);
+        SinglyLinkedListNode pt3 = merged;
+
+        while (pt1 != null && pt2 != null) {
+            if (pt1.data < pt2.data) {
+                pt3.next = new SinglyLinkedListNode(pt1.data);
+                pt1 = pt1.next;
+            } else {
+                pt3.next = new SinglyLinkedListNode(pt2.data);
+                pt2 = pt2.next;
+            }
+            pt3 = pt3.next;
+        }
+
+        if (pt1 != null)
+            pt3.next = pt1;
+        if (pt2 != null)
+            pt3.next = pt2;
+
+        return merged.next;
+    }
+```
+
+[Java Solution](week3/mergedlinkedlist/Solution.java) |
+
+---
+### [Ice Cream Parlor](https://www.hackerrank.com/challenges/one-month-preparation-kit-icecream-parlor/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-three)
+Two friends like to pool their money and go to the ice cream parlor. They always choose two distinct flavors and they spend all of their money.
+
+Given a list of prices for the flavors of ice cream, select the two that will cost all of the money they have. 
+```Java
+    public static List<Integer> icecreamParlor(int m, List<Integer> arr) {
+        for (int i = 0; i < arr.size() - 1; i++) {
+            if (arr.get(i) >= m)
+                continue;
+
+            for (int j = i + 1; j < arr.size(); j++) {
+                if (arr.get(j) >= m)
+                    continue;
+
+                if (arr.get(i) + arr.get(j) == m)
+                    return Arrays.asList(i + 1, j + 1);
+            }
+        }
+        return new ArrayList<>();
+    }
+```
+
+[Java Solution](week3/icecreamparlor/Solution.java) |
+
+---
+### [Queue using Two Stacks](https://www.hackerrank.com/challenges/one-month-preparation-kit-queue-using-two-stacks/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-three)
+A queue is an abstract data type that maintains the order in which elements were added to it, allowing the oldest elements to be removed from the front and new elements to be added to the rear. This is called a First-In-First-Out (FIFO) data structure because the first element added to the queue (i.e., the one that has been waiting the longest) is always the first one to be removed.
+
+A basic queue has the following operations:
+
+* Enqueue: add a new element to the end of the queue.
+* Dequeue: remove the element from the front of the queue and return it.
+
+In this challenge, you must first implement a queue using two stacks. Then process q queries, where each query is one of the following types:
+
+1. 1: x: Enqueue element x into the end of the queue.
+2. 2: Dequeue the element at the front of the queue.
+3. 3: Print the element at the front of the queue.
+```Java
+    public static void main(String[] args) {
+        Stack<String> s1 = new Stack<>();
+        Stack<String> s2 = new Stack<>();
+
+        Scanner scanner = new Scanner(System.in);
+        int q = scanner.nextInt();
+        scanner.nextLine();
+        for (int i = 0; i < q; i++) {
+            String line = scanner.nextLine();
+            String[] cmd = line.split("\\s");
+
+            switch (cmd[0]) {
+                case "1":
+                    s1.push(cmd[1]);
+                    break;
+                case "2":
+                    if (s2.isEmpty()) {
+                        while (!s1.isEmpty()) {
+                            s2.push(s1.pop());
+                        }
+                    }
+                    s2.pop();
+                    break;
+                case "3":
+                    if (s2.isEmpty()) {
+                        while (!s1.isEmpty()) {
+                            s2.push(s1.pop());
+                        }
+                    }
+                    System.out.println(s2.peek());
+                    break;
+                default:
+                    break;
+            }
+        }
+        scanner.close();
+    }
+```
+
+[Java Solution](week3/queuetwostacks/Solution.java) |
+
+---
+### [Balanced Brackets](https://www.hackerrank.com/challenges/one-month-preparation-kit-balanced-brackets/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-three)
+A bracket is considered to be any one of the following characters: (, ), {, }, \[, or \].
+
+Two brackets are considered to be a matched pair if the an opening bracket (i.e., (, \[, or {) occurs to the left of a closing bracket (i.e., ), \], or }) of the exact same type. There are three types of matched pairs of brackets: [], {}, and ().
+
+A matching pair of brackets is not balanced if the set of brackets it encloses are not matched. For example, {[(])} is not balanced because the contents in between { and } are not balanced. The pair of square brackets encloses a single, unbalanced opening bracket, (, and the pair of parentheses encloses a single, unbalanced closing square bracket, ].
+
+By this logic, we say a sequence of brackets is balanced if the following conditions are met:
+
+* It contains no unmatched brackets.
+* The subset of brackets enclosed within the confines of a matched pair of brackets is also a matched pair of brackets.
+
+Given n strings of brackets, determine whether each sequence of brackets is balanced. If a string is balanced, return YES. Otherwise, return NO. 
+```Java
+    public static String isBalanced(String s) {
+        Stack<Character> stack = new Stack<>();
+        String opening = "[{(";
+        String closing = "]})";
+
+        for (Character b : s.toCharArray()) {
+            if (closing.indexOf(b) > -1) {
+                if (stack.isEmpty() || opening.charAt(closing.indexOf(b)) != stack.pop()) {
+                    return "NO";
+                }
+            } else {
+                stack.push(b);
+            }
+        }
+        return stack.isEmpty() ? "YES" : "NO";
+    }
+```
+
+[Java Solution](week3/balancedbrackets/Solution.java) |
+
+---
+### [Waiter](https://www.hackerrank.com/challenges/one-month-preparation-kit-waiter/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-three)
+You are a waiter at a party. There is a pile of numbered plates. Create an empty `answers` array. At each iteration, `i` , remove each plate from the top of the stack in order. Determine if the number on the plate is evenly divisible by the `ith` prime number. If it is, stack it in pile `B`. Otherwise, stack it in stack `A`. Store the values in `B` from top to bottom in `answers`. In the next iteration, do the same with the values in stack `A`. Once the required number of iterations is complete, store the remaining values in `A` in `answers`, again from top to bottom. Return the `answers` array. 
+```Java
+    private static List<Integer> getPrimes(int q) {
+        List<Integer> primes = new ArrayList<>();
+        Integer ith = 2;
+        while (primes.size() < q) {
+            if (new BigInteger(ith.toString()).isProbablePrime(100)) {
+                primes.add(ith++);
+            }
+        }
+        return primes;
+    }
+
+    public static List<Integer> waiter(List<Integer> number, int q) {
+        List<Integer> primes = getPrimes(q);
+        List<Integer> answers = new ArrayList<>();
+
+        Stack<Integer> a = new Stack<>();
+        // Stack the plates in reverse order
+        a.addAll(number);
+
+        for (int i = 0; i < q; i++) {
+            Stack<Integer> tempA = new Stack<>();
+            Stack<Integer> tempB = new Stack<>();
+            while (!a.isEmpty()) {
+                int item = a.pop();
+                // Check if divisible by ith-prime
+                if (item % primes.get(i) == 0)
+                    tempB.push(item);
+                else
+                    tempA.push(item);
+            }
+            a = tempA;
+            // Move elements to answers
+            while (!tempB.isEmpty())
+                answers.add(tempB.pop());
+        }
+        // Move remaining elements in A
+        while (!a.isEmpty()) {
+            answers.add(a.pop());
+        }
+        return answers;
+    }
+```
+
+[Java Solution](week3/waiter/Solution.java) |
+
+---
+### [Simple Text Eidtor](https://www.hackerrank.com/challenges/one-month-preparation-kit-simple-text-editor/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-three)
+Implement a simple text editor. The editor initially contains an empty string, S. Perform Q operations of the following 4 types:
+
+1. append(W) - Append string to the end of S.
+2. delete(k) - Delete the last characters of S.
+3. print(k) - Print the kth character of S.
+4. undo() - Undo the last (not previously undone) operation of type 1 or 2, reverting S to the state it was in prior to that operation. 
+```Java
+    public static void main(String[] args) {
+        Stack<String> stack = new Stack<>();
+        StringBuilder textEditor = new StringBuilder();
+        Scanner scanner = new Scanner(System.in);
+        int q = scanner.nextInt();
+
+        while (q-- > 0) {
+            String op = scanner.next();
+            switch (op) {
+                case "1":
+                    stack.push(textEditor.toString());
+                    textEditor.append(scanner.next());
+                    break;
+                case "2":
+                    int k1 = scanner.nextInt();
+                    stack.push(textEditor.toString());
+                    textEditor.delete(textEditor.length() - k1, textEditor.length());
+                    break;
+                case "3":
+                    int k2 = scanner.nextInt();
+                    System.out.println(textEditor.charAt(k2 - 1));
+                    break;
+                case "4":
+                    textEditor = new StringBuilder(stack.pop());
+                    break;
+                default:
+                    break;
+            }
+        }
+        scanner.close();
+    }
+```
+
+[Java Solution](week3/simpletexteditor/Solution.java) |
+
+---
+### Mock Test
+
+#### [Truck Tour](https://www.hackerrank.com/challenges/truck-tour/problem)
+Suppose there is a circle. There are N petrol pumps on that circle. Petrol pumps are numbered 0 to (N - 1) (both inclusive). You have two pieces of information corresponding to each of the petrol pump: (1) the amount of petrol that particular petrol pump will give, and (2) the distance from that petrol pump to the next petrol pump.
+
+Initially, you have a tank of infinite capacity carrying no petrol. You can start the tour at any of the petrol pumps. Calculate the first point from where the truck will be able to complete the circle. Consider that the truck will stop at each of the petrol pumps. The truck will move one kilometer for each litre of the petrol
+```Java
+    public static int truckTour(List<List<Integer>> petrolpumps) {
+        int start;
+        for (start = 0; start < petrolpumps.size(); start++) {
+            int tank = 0;
+            for (int j = start; j < petrolpumps.size(); j++) {
+                int fuel = petrolpumps.get(j).get(0);
+                int distance = petrolpumps.get(j).get(1);
+                tank += fuel - distance;
+                if (tank < 0)
+                    break;
+            }
+            if (tank >= 0)
+                break;
+        }
+        return start;
+    }
+```
+
+[Java Solution](week3/mock/trucktour/Solution.java)
+
+---
+
+#### [Pairs](https://www.hackerrank.com/challenges/pairs/problem)
+Given an array of integers and a target value, determine the number of pairs of array elements that have a difference equal to the target value
+```Java
+    public static int pairs(int k, List<Integer> arr) {
+        // let a, b in arr ==> a - b = k ==> a = b + k
+        int cntr = 0;
+        Collections.sort(arr);
+        for (Integer num : arr) {
+            if (Collections.binarySearch(arr, num + k) >= 0) {
+                cntr++;
+            }
+        }
+        return cntr;
+    }
+```
+
+[Java Solution](week3/mock/pairs/Solution.java)
+
+---
+
+#### [Big Sorting](https://www.hackerrank.com/challenges/big-sorting/problem)
+Consider an array of numeric strings where each string is a positive number with anywhere from 1 to 10^6 digits. Sort the array's elements in non-decreasing, or ascending order of their integer values and return the
+sorted array.
+```Java
+    public static List<String> bigSorting(List<String> unsorted) {
+        // if they have the different length then we just compare their lengths
+        // else we compare the numbers
+        unsorted.sort((a, b) -> a.length() != b.length() ? a.length() - b.length() : a.compareTo(b));
+
+        return unsorted;
+    }
+```
+
+[Java Solution](week3/mock/bigsorting/Solution.java)
+
+---
+
+
 
 
 
