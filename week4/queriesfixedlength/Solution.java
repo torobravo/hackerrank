@@ -24,37 +24,18 @@ class Result {
      */
 
     public static List<Integer> solve(List<Integer> arr, List<Integer> queries) {
-        List<Integer> result = new ArrayList<>();
-        // List<Integer> maxs = new ArrayList<>();
-
-        // for (int q = 0; q < arr.size(); q++) {
-        // maxs.add(arr.get(q));
-        // }
-
-        // for (int q = 0; q < queries.size(); q++) {
-        // int d = queries.get(q);
-        // int min = Integer.MAX_VALUE;
-        // for (int i = 0; i <= arr.size() - d; i++) {
-        // maxs.set(i, maxs.get(i) < arr.get(i + d - 1) ? arr.get(i + d - 1) :
-        // maxs.get(i));
-        // if (min > maxs.get(i))
-        // min = maxs.get(i);
-        // }
-        // result.add(min);
-        // }
-
-        for (int q = 0; q < queries.size(); q++) {
-            int d = queries.get(q);
+        List<Integer> result = new ArrayList<>(queries.size());
+        for (int winSize : queries) {
             int min = Integer.MAX_VALUE;
-            int last = arr.get(0);
-            for (int i = 0; i <= arr.size() - d; i++) {
+            int last = -1;
+            for (int i = 0; i <= arr.size() - winSize; i++) {
                 int max = Integer.MIN_VALUE;
-                last = arr.get(i);
-                if (last < min) {
-                    for (int j = i; j < i + d; j++) {
-
-                        if (max < arr.get(j))
-                            max = arr.get(j);
+                if (i <= last)
+                    continue;
+                for (int j = i; j < i + winSize && j < arr.size(); j++) {
+                    if (max < arr.get(j)) {
+                        max = arr.get(j);
+                        last = j;
                     }
                 }
                 if (min > max) {
@@ -67,17 +48,49 @@ class Result {
         return result;
     }
 
+    public static List<Integer> solve2(List<Integer> arr, List<Integer> queries) {
+        List<Integer> result = new ArrayList<>(queries.size());
+
+        for (int winSize : queries) {
+            int max = Integer.MIN_VALUE;
+            // Calculates the first max within the first window
+            for (int i = 0; i < winSize; i++) {
+                max = Math.max(max, arr.get(i));
+            }
+            int min = max; // the first min is equal to the first max
+
+            // Slide the window and update the max
+            for (int i = winSize; i < arr.size(); i++) {
+                // Remove the element that goes out of the window
+                if (arr.get(i - winSize) == max) {
+                    max = Integer.MIN_VALUE;
+                    // Recalculate the maximum within the current window
+                    for (int j = i - winSize + 1; j <= i; j++) {
+                        max = Math.max(max, arr.get(j));
+                    }
+                }
+                // Update the maximum with the new element
+                max = Math.max(max, arr.get(i));
+                // Update the minimum of maximums
+                min = Math.min(min, max);
+            }
+            result.add(min);
+        }
+
+        return result;
+    }
+
 }
 
 public class Solution {
     public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         // BufferedReader bufferedReader = new BufferedReader(new
-        // InputStreamReader(System.in));
-        BufferedReader bufferedReader = new BufferedReader(new FileReader("c:\\temp\\hackerrank_input.txt"));
+        // FileReader("c:\\temp\\hackerrank_input.txt"));
 
-        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
         // BufferedWriter bufferedWriter = new BufferedWriter(new
-        // OutputStreamWriter(System.out));
+        // FileWriter(System.getenv("OUTPUT_PATH")));
+        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(System.out));
 
         String[] firstMultipleInput = bufferedReader.readLine().replaceAll("\\s+$", "").split(" ");
 
