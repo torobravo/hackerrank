@@ -1343,6 +1343,488 @@ sorted array.
 [Java Solution](week3/mock/bigsorting/Solution.java)
 
 ---
+## Week 4
+
+### [Equal Stacks](https://www.hackerrank.com/challenges/one-month-preparation-kit-equal-stacks/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four)
+You have three stacks of cylinders where each cylinder has the same diameter, but they may vary in height. You can change the height of a stack by removing and discarding its topmost cylinder any number of times.
+
+Find the maximum possible height of the stacks such that all of the stacks are exactly the same height. This means you must remove zero or more cylinders from the top of zero or more of the three stacks until they are all the same height, then return the height. 
+```Java
+    public static int equalStacks(List<Integer> h1, List<Integer> h2, List<Integer> h3) {
+        int height1 = 0, height2 = 0, height3 = 0;
+        for (Integer ele : h1)
+            height1 += ele;
+
+        for (Integer ele : h2)
+            height2 += ele;
+
+        for (Integer ele : h3)
+            height3 += ele;
+
+        while (height1 != height2 || height2 != height3) {
+            if (height1 >= height2 && height1 >= height3) {
+                height1 -= h1.remove(0);
+            } else if (height2 >= height1 && height2 >= height3) {
+                height2 -= h2.remove(0);
+            } else if (height3 >= height1 && height3 >= height2) {
+                height3 -= h3.remove(0);
+            }
+        }
+        return height1;
+    }
+```
+
+[Java Solution](week4/equalstack/Solution.java) | 
+
+---
+
+### [The Maximum Subarray](https://www.hackerrank.com/challenges/one-month-preparation-kit-maxsubarray/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four)
+We define subsequence as any subset of an array. We define a subarray as a contiguous subsequence in an array.
+
+Given an array, find the maximum possible sum among:
+
+1. all nonempty subarrays.
+2. all nonempty subsequences.
+
+Print the two values as space-separated integers on one line.
+
+Note that empty subarrays/subsequences should not be considered. 
+```Java
+    public static List<Integer> maxSubarray(List<Integer> arr) {
+        int maxSubarray = Integer.MIN_VALUE;
+        int maxSubseq = Integer.MIN_VALUE;
+        int currentSum = 0, currentSumSubseq = 0;
+
+        for (Integer num : arr) {
+            // max subarray - Kadane's Algorithm
+            currentSum += num;
+
+            if (currentSum < num)
+                currentSum = num;
+
+            if (maxSubarray < currentSum)
+                maxSubarray = currentSum;
+
+            // max subseq
+            if (num >= 0) { // only add if positive
+                currentSumSubseq += num;
+                maxSubseq = currentSumSubseq;
+            }
+            if (num > maxSubseq) // corner case all negatives
+                maxSubseq = num;
+        }
+
+        return Arrays.asList(maxSubarray, maxSubseq);
+    }
+```
+
+[Java Solution](week4/maxsubarray/Solution.java) | 
+
+---
+
+### [Lego Blocks](https://www.hackerrank.com/challenges/one-month-preparation-kit-lego-blocks/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four)
+You have an infinite number of 4 types of lego blocks of sizes given as (depth x height x width):
+
+Using these blocks, you want to make a wall of height n and width m. Features of the wall are:
+
+- The wall should not have any holes in it.
+- The wall you build should be one solid structure, so there should not be a straight vertical break across all rows of bricks.
+- The bricks must be laid horizontally.
+
+How many ways can the wall be built?
+```Java
+    /**
+     * Raise a num to an exponent and mod the result
+     * NOTE: don't use Math.pow() since it will give
+     * incorrect results since it does not mod the
+     * intermediate results
+     */
+    private static long pow(long num, int exp, long mod) {
+        long res = num;
+        while (exp-- > 1) {
+            res = (res * num) % mod;
+        }
+        return res;
+    }
+
+    /**
+     * Strategy using Dynamic Programming:
+     * 1. Create an array where each index represents the width
+     * and store the number of permuations for a single row.
+     * 
+     * 2. Create an array where each index represents the width
+     * and store the number of valid and invalid permutations for
+     * the total number of rows (height)
+     * 
+     * 3. Create an array where each index represents the width
+     * and store the number of invalid permuations of each
+     * total number of rows.
+     * 
+     * 4. The final result will be the substracion of (2) - (3):
+     * result = (valid + invalid) - (invalid)
+     * 
+     */
+    public static int legoBlocks(int h, int w) {
+        long divisor = 1000000007; // every calculation must be mod by this number
+
+        // STEP 1:
+        // Permutations for a single row is:
+        // when width=0; 0 valid permutation
+        // when width=1; 1 valid permutation
+        // when width=2; 2 valid permutations
+        // when width=3; 4 valid permutations
+        // when width=4; 8 valid permutations
+        // when widht=N; the sum of the previous 4 widths: (N-1) + (N-2) + (N-3) + (N-4)
+        List<Long> singleRow = new ArrayList<>(Arrays.asList(0L, 1L, 2L, 4L, 8L));
+
+        // STEP 2:
+        // Total permutations for all rows:
+        // when width=0; singleRow[0]^h valid permutations (always 0)
+        // when width=1; singleRow[1]^h valid permutations (always 1)
+        // when width=2; singleRow[2]^h valid permutations
+        // when width=3; singleRow[3]^h valid permutations
+        // when width=4; singleRow[4]^h valid permutations
+        // when width=N; singleRow[N]^h valid permutations
+        List<Long> total = new ArrayList<>(
+                Arrays.asList(0L, 1L,
+                        pow(2, h, divisor),
+                        pow(4, h, divisor),
+                        pow(8, h, divisor)));
+
+        // Completes the singleRow and total arrays dynamically from
+        // the previous values according to the above rules
+        for (int i = 5; i <= w; i++) {
+            long val = (singleRow.get(i - 1) + singleRow.get(i - 2) +
+                    singleRow.get(i - 3) + singleRow.get(i - 4)) % divisor;
+            singleRow.add(val);
+
+            total.add(pow(val, h, divisor));
+        }
+
+        // STEP 3 Invalid permutations:
+        // Perform a vertical cut across all rows of bricks
+        // when width=0; 0 invalid permutations
+        // when width=1; 0 invalid permutations
+        List<Long> invalid = new ArrayList<>(Arrays.asList(0L, 0L));
+
+        // This is the tricky part:
+        // Starting with a 2-width cut up to the width
+        // For each cut, walk 1-width at a time up to the cut
+        // and add the result of the left * right (invalid permutations)
+        // the left part are the valid permutations
+        // the right part are all possible permutations (valid and invalid)
+        for (int cut = 2; cut <= w; cut++) {
+            long anum = 0;
+            for (int i = 1; i < cut; i++) {
+                long l = total.get(i) - invalid.get(i);
+                long r = total.get(cut - i);
+                anum += ((l * r) % divisor);
+            }
+            invalid.add(anum % divisor);
+        }
+
+        // STEP 4
+        // We have finally calculated all the valid and invalid permuations
+        // we only substract the invalid permutations from the total permuations
+        long r = (total.get(w) - invalid.get(w)) % divisor;
+
+        // In case the substraction is negative
+        // add the divisor(mod) to the result to find out the real value
+        while (r < 0)
+            r += divisor;
+
+        return (int) r;
+    }
+
+```
+
+[Java Solution](week4/legoblocks/Solution.java) | 
+
+---
+
+### [QHEAP1](https://www.hackerrank.com/challenges/one-month-preparation-kit-qheap1/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four)
+This question is designed to help you get a better understanding of basic heap operations.
+
+There are 3 types of query:
+
+* "1 v" - Add an element v to the heap.
+* "2 v" - Delete the element v from the heap.
+* "3" - Print the minimum of all the elements in the heap.
+
+NOTE: It is guaranteed that the element to be deleted will be there in the heap. Also, at any instant, only distinct elements will be in the heap.
+```Java
+   static class MyHeap {
+        private long[] items;
+        private int capacity = 10;
+        private int size;
+
+        private int leftIndex(int index) {
+            return index * 2 + 1;
+        }
+
+        private int rightIndex(int index) {
+            return index * 2 + 2;
+        }
+
+        private int parentIndex(int index) {
+            return (index - 1) / 2;
+        }
+
+        private long getLeftNode(int index) {
+            return items[leftIndex(index)];
+        }
+
+        private long getRightNode(int index) {
+            return items[rightIndex(index)];
+        }
+
+        private long getParentNode(int index) {
+            return items[parentIndex(index)];
+        }
+
+        private boolean hasLeftNode(int index) {
+            return leftIndex(index) < size;
+        }
+
+        private boolean hasRightNode(int index) {
+            return rightIndex(index) < size;
+        }
+
+        private boolean hasParentNode(int index) {
+            return parentIndex(index) >= 0;
+        }
+
+        public MyHeap() {
+            this.size = 0;
+            this.items = new long[capacity];
+        }
+
+        public void add(int item) {
+            checkCapacity();
+            this.items[size] = item;
+            this.size += 1;
+            heapifyUp();
+        }
+
+        public long poll() {
+            long head = items[0];
+            swap(0, size - 1);
+            size -= 1;
+            heapifyDown();
+
+            return head;
+        }
+
+        public long peek() {
+            long item = items[0];
+            return item;
+        }
+
+        public void remove(int item) {
+            int index = search(item);
+            swap(index, size - 1);
+            size -= 1;
+            heapifyDown(index);
+        }
+
+        public int search(int item) {
+            for (int i = 0; i < size; i++) {
+                if (item == items[i])
+                    return i;
+            }
+            return -1;
+        }
+
+        private void checkCapacity() {
+            if (size >= capacity) { // grow
+                this.capacity *= 2;
+                long[] newItems = new long[capacity];
+                for (int i = 0; i < size; i++) {
+                    newItems[i] = items[i];
+                }
+                this.items = newItems;
+            }
+        }
+
+        private void swap(int indexOne, int indexTwo) {
+            long tmp = this.items[indexOne];
+            this.items[indexOne] = this.items[indexTwo];
+            this.items[indexTwo] = tmp;
+        }
+
+        private void heapifyUp() {
+            int index = size - 1;
+            while (hasParentNode(index) && getParentNode(index) > items[index]) {
+                swap(parentIndex(index), index);
+                index = parentIndex(index);
+            }
+        }
+
+        private void heapifyDown() {
+            heapifyDown(0);
+        }
+
+        private void heapifyDown(int currentIndex) {
+            while (hasLeftNode(currentIndex)) {
+                int smallerChildIndex = leftIndex(currentIndex);
+                if (hasRightNode(currentIndex) && getRightNode(currentIndex) < getLeftNode(currentIndex)) {
+                    smallerChildIndex = rightIndex(currentIndex);
+                }
+
+                if (items[smallerChildIndex] < items[currentIndex]) {
+                    swap(currentIndex, smallerChildIndex);
+                }
+                currentIndex = smallerChildIndex;
+            }
+        }
+
+    }
+
+    public static void main(String[] args) throws IOException {
+        Scanner scanner = new Scanner(System.in);
+        // PriorityQueue<Integer> pq = new PriorityQueue<>();
+        Solution.MyHeap pq = new Solution.MyHeap();
+        int Q = scanner.nextInt();
+        while (Q-- > 0) {
+            int op = scanner.nextInt();
+            switch (op) {
+                case 1: // add
+                    pq.add(scanner.nextInt());
+                    break;
+                case 2: // delete
+                    pq.remove(scanner.nextInt());
+                    break;
+                default: // print
+                    System.out.println(pq.peek());
+            }
+        }
+        scanner.close();
+    }
+```
+
+[Java Solution](week4/qheap1/Solution.java) | 
+
+---
+
+### [Jesse and Cookies]()
+
+```Java
+
+```
+
+[Java Solution]() | 
+
+---
+
+### [Hackerland Radio Transmitters]()
+
+```Java
+
+```
+
+[Java Solution]() | 
+
+---
+
+### [Queries with fixed length]()
+
+```Java
+
+```
+
+[Java Solution]() | 
+
+---
+
+### [Array Manipulation]()
+
+```Java
+
+```
+
+[Java Solution]() | 
+
+---
+
+### [Highest Value Palindrome]()
+
+```Java
+
+```
+
+[Java Solution]() | 
+
+---
+
+### [Lily's Homework]()
+
+```Java
+
+```
+
+[Java Solution]() | 
+
+---
+
+### [Tree: Preorder Traversal]()
+
+```Java
+
+```
+
+[Java Solution]() | 
+
+---
+
+### [Tree: Huffman Decoding]()
+
+```Java
+
+```
+
+[Java Solution]() | 
+
+---
+
+### [Binary Search Tree: Lowest Common Ancestor]()
+
+```Java
+
+```
+
+[Java Solution]() | 
+
+---
+
+### [No Prefix Set]()
+
+```Java
+
+```
+
+[Java Solution]() | 
+
+---
+
+### [Castle on the Grid]()
+
+```Java
+
+```
+
+[Java Solution]() | 
+
+---
+
+### [Roads and Libraries]()
+
+```Java
+
+```
+
+[Java Solution]() | 
+
+---
 
 
 
