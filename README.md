@@ -1732,17 +1732,40 @@ Given the sweetness of a number of cookies, determine the minimum number of oper
 
 ---
 
-### [Hackerland Radio Transmitters]()
+### [Hackerland Radio Transmitters](https://www.hackerrank.com/challenges/one-month-preparation-kit-hackerland-radio-transmitters/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four)
+Hackerland is a one-dimensional city with houses aligned at integral locations along a road. The Mayor wants to install radio transmitters on the roofs of the city's houses. Each transmitter has a fixed range meaning it can transmit a signal to all houses within that number of units distance away.
 
+Given a map of Hackerland and the transmission range, determine the minimum number of transmitters so that every house is within range of at least one transmitter. Each transmitter must be installed on top of an existing house.
 ```Java
+    public static int hackerlandRadioTransmitters(List<Integer> x, int k) {
+        int transmitter = 0;
+        Collections.sort(x);
+        int index = 0;
+        while (index < x.size()) {
+            int house = x.get(index) + k;
+            while (index < x.size() && x.get(index) <= house) {
+                index++;
+            }
+            transmitter++;
 
+            house = x.get(index - 1) + k;
+            while (index < x.size() && x.get(index) <= house) {
+                index++;
+            }
+        }
+        return transmitter;
+    }
 ```
 
-[Java Solution]() | 
+[Java Solution](week4/hackerlandradio/Solution.java) | 
 
 ---
 
-### [Queries with fixed length]()
+### [Queries with fixed length](https://www.hackerrank.com/challenges/one-month-preparation-kit-queries-with-fixed-length/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four)
+Consider an n-integer sequence, *A = {a0, a1,...an-1}*. We perform a query on A by using an integer, a, to calculate the result of the following expression:
+
+![Alt text](resources/minmax.svg)
+<img src="resources/minmax.svg">
 
 ```Java
 
