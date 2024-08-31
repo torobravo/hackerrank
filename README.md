@@ -1706,13 +1706,29 @@ NOTE: It is guaranteed that the element to be deleted will be there in the heap.
 
 ---
 
-### [Jesse and Cookies]()
+### [Jesse and Cookies](https://www.hackerrank.com/challenges/one-month-preparation-kit-jesse-and-cookies/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four)
+Jesse loves cookies and wants the sweetness of some cookies to be greater than value k. To do this, two cookies with the least sweetness are repeatedly mixed. This creates a special combined cookie with:
 
+sweetness = (1 x Least sweet cookie + 2 x 2nd least sweet cookie).
+
+This occurs until all the cookies have a sweetness >= k.
+
+Given the sweetness of a number of cookies, determine the minimum number of operations required. If it is not possible, return -1.
 ```Java
+    public static int cookies(int k, List<Integer> A) {
+        int iterations = 0;
+        PriorityQueue<Integer> pq = new PriorityQueue<>(A);
 
+        while (pq.peek() < k && pq.size() >= 2) {
+            iterations += 1;
+            int sweetness = pq.poll() + 2 * pq.poll();
+            pq.offer(sweetness);
+        }
+        return pq.peek() >= k ? iterations : -1;
+    }
 ```
 
-[Java Solution]() | 
+[Java Solution](week4/jessecookies/Solution.java) | 
 
 ---
 
