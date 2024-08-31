@@ -22,20 +22,19 @@ class Result {
      * 1. INTEGER_ARRAY arr
      * 2. INTEGER_ARRAY queries
      */
-
     public static List<Integer> solve(List<Integer> arr, List<Integer> queries) {
-        List<Integer> result = new ArrayList<>(queries.size());
-        for (int winSize : queries) {
+        List<Integer> result = new ArrayList<>();
+        for (int d : queries) {
             int min = Integer.MAX_VALUE;
-            int last = -1;
-            for (int i = 0; i <= arr.size() - winSize; i++) {
+
+            for (int i = 0; i <= arr.size() - d; i++) {
                 int max = Integer.MIN_VALUE;
-                if (i <= last)
-                    continue;
-                for (int j = i; j < i + winSize && j < arr.size(); j++) {
+                int upper = i + d;
+
+                for (int j = i; j < upper; j++) {
                     if (max < arr.get(j)) {
                         max = arr.get(j);
-                        last = j;
+                        i = j; // jump to index of max value
                     }
                 }
                 if (min > max) {
@@ -44,39 +43,6 @@ class Result {
             }
             result.add(min);
         }
-
-        return result;
-    }
-
-    public static List<Integer> solve2(List<Integer> arr, List<Integer> queries) {
-        List<Integer> result = new ArrayList<>(queries.size());
-
-        for (int winSize : queries) {
-            int max = Integer.MIN_VALUE;
-            // Calculates the first max within the first window
-            for (int i = 0; i < winSize; i++) {
-                max = Math.max(max, arr.get(i));
-            }
-            int min = max; // the first min is equal to the first max
-
-            // Slide the window and update the max
-            for (int i = winSize; i < arr.size(); i++) {
-                // Remove the element that goes out of the window
-                if (arr.get(i - winSize) == max) {
-                    max = Integer.MIN_VALUE;
-                    // Recalculate the maximum within the current window
-                    for (int j = i - winSize + 1; j <= i; j++) {
-                        max = Math.max(max, arr.get(j));
-                    }
-                }
-                // Update the maximum with the new element
-                max = Math.max(max, arr.get(i));
-                // Update the minimum of maximums
-                min = Math.min(min, max);
-            }
-            result.add(min);
-        }
-
         return result;
     }
 
