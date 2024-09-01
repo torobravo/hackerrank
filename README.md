@@ -1765,23 +1765,82 @@ Given a map of Hackerland and the transmission range, determine the minimum numb
 Consider an n-integer sequence, *A = {a0, a1,...an-1}*. We perform a query on A by using an integer, a, to calculate the result of the following expression:
 
 ![Alt text](resources/minmax.svg)
-<img src="resources/minmax.svg">
 
+In other words, if we let *mi = max(ai,ai+1,ai+2,...ai+d-1)*, then you need to calculate *min(m0,m1,...,mn-d)*.
+
+Given arr and q queries, return a list of answers to each query.
 ```Java
+    public static List<Integer> solve(List<Integer> arr, List<Integer> queries) {
+        List<Integer> result = new ArrayList<>();
+        for (int d : queries) {
+            int min = Integer.MAX_VALUE;
 
+            for (int i = 0; i <= arr.size() - d; i++) {
+                int max = Integer.MIN_VALUE;
+                int upper = i + d;
+
+                for (int j = i; j < upper; j++) {
+                    if (max < arr.get(j)) {
+                        max = arr.get(j);
+                        i = j; // jump to index of max value
+                    }
+                }
+                if (min > max) {
+                    min = max;
+                }
+            }
+            result.add(min);
+        }
+        return result;
+    }
 ```
 
-[Java Solution]() | 
+[Java Solution](week4/queriesfixedlength/Solution.java) | 
 
 ---
 
-### [Array Manipulation]()
-
+### [Array Manipulation](https://www.hackerrank.com/challenges/one-month-preparation-kit-crush/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four)
+Starting with a 1-indexed array of zeros and a list of operations, for each operation add a value to each the array element between two given indices, inclusive. Once all operations have been performed, return the maximum value in the array. 
 ```Java
+    /*
+    queries = [[1,5,3], [4,8,7],[6,10,1]]
+    n = 10
 
+    |             |      optimal approach       |       |
+    | array index | [1,5,3] | [4,8,7] | [6,9,1] | Total |
+    |    1        |    3    |         |         |   3   |
+    |    2        |         |         |         |       |
+    |    3        |         |         |         |       |
+    |    4        |         |    7    |         |   7   |
+    |    5        |   -3    |         |         |  -3   |
+    |    6        |         |         |    1    |   1   |
+    |    7        |         |         |         |       |
+    |    8        |         |         |         |       |
+    |    9        |         |   -7    |         |  -7   |
+    |    10       |         |         |         |       |
+    |    10+1     |         |         |   -1    |  -1   |
+     */
+    public static long arrayManipulation(int n, List<List<Integer>> queries) {
+        Map<Integer, Long> sum = new TreeMap<>(); // order by key
+        for (List<Integer> list : queries) {
+            int a = list.get(0);
+            int b = list.get(1);
+            long k = list.get(2);
+            sum.put(a, sum.getOrDefault(a, 0L) + k);
+            sum.put(b + 1, sum.getOrDefault(b + 1, 0L) - k);
+        }
+
+        long max = 0L;
+        long current = 0L;
+        for (long value : sum.values()) {
+            current += value;
+            max = Math.max(max, current);
+        }
+        return max;
+    }
 ```
 
-[Java Solution]() | 
+[Java Solution](week4/arraymanipulation/Solution.java) | 
 
 ---
 
@@ -1805,33 +1864,74 @@ Consider an n-integer sequence, *A = {a0, a1,...an-1}*. We perform a query on A 
 
 ---
 
-### [Tree: Preorder Traversal]()
-
+### [Tree: Preorder Traversal](https://www.hackerrank.com/challenges/one-month-preparation-kit-tree-preorder-traversal/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four)
+Complete the *preOrder* function in the editor below, which has parameter: a pointer to the root of a binary tree. It must print the values in the tree's preorder traversal as a single line of space-separated values. 
 ```Java
-
+    public static void preOrder(Node root) {
+        if (root == null) {
+            return;
+        }
+        // visit the root
+        System.out.print(root.data + " ");
+        // traverse the left
+        preOrder(root.left);
+        // traverse the right
+        preOrder(root.right);
+    }
 ```
 
-[Java Solution]() | 
+[Java Solution](week4/preordertraversal/Solution.java) | 
 
 ---
 
-### [Tree: Huffman Decoding]()
+### [Tree: Huffman Decoding](https://www.hackerrank.com/challenges/one-month-preparation-kit-tree-huffman-decoding/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four)
+Huffman coding assigns variable length codewords to fixed length input characters based on their frequencies. More frequent characters are assigned shorter codewords and less frequent characters are assigned longer codewords. All edges along the path to a character contain a code digit. If they are on the left side of the tree, they will be a 0 (zero). If on the right, they'll be a 1 (one). Only the leaves will contain a letter and its frequency count. All other nodes will contain a null instead of a character, and the count of the frequency of all of it and its descendant characters.
+
+For instance, consider the string ABRACADABRA. There are a total of 11 characters in the string. This number should match the count in the ultimately determined root of the tree. Our frequencies are *A=5, B=2,R=2, C=1* and *D=1*. The two smallest frequencies are for *C* and *D*, both equal to 1, so we'll create a tree with them. The root node will contain the sum of the counts of its descendants, in this case 1 + 1 = 2. The left node will be the first character encountered, *C*, and the right will contain *D*. Next we have 2 items with a character count of 2: the tree we just created, the character *B* and the character *R*. The tree came first, so it will go on the left of our new root node. *B* will go on the right. Repeat until the tree is complete, then fill in the 1's and 0's for the edges. The finished graph looks like: 
+
+Input characters are only present in the leaves. Internal nodes have a character value of ϕ (NULL). We can determine that our values for characters are: 
+
+To decode the encoded string, follow the zeros and ones to a leaf and return the character there.
+
+You are given pointer to the root of the Huffman tree and a binary coded string to decode. You need to print the decoded string.
 
 ```Java
+    public void decode(String s, Node root) {
+        Node current = root;
+        for (char c : s.toCharArray()) {
+            if (c == '0') {
+                current = current.left;
+            } else {
+                current = current.right;
+            }
 
+            if (current != null && current.data != '\0') {
+                System.out.print(current.data);
+                current = root;
+            }
+        }
+    }
 ```
 
-[Java Solution]() | 
+[Java Solution](week4/huffmandecoding/Solution.java) | 
 
 ---
 
-### [Binary Search Tree: Lowest Common Ancestor]()
-
+### [Binary Search Tree: Lowest Common Ancestor](https://www.hackerrank.com/challenges/one-month-preparation-kit-binary-search-tree-lowest-common-ancestor/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four)
+You are given pointer to the root of the binary search tree and two values *v1* and *v2*. You need to return the lowest common ancestor (LCA) of *v1* and *v2* in the binary search tree. 
 ```Java
+    public static Node lca(Node root, int v1, int v2) {
+        if (v1 > root.data && v2 > root.data)
+            return lca(root.right, v1, v2);
 
+        if (v1 < root.data && v2 < root.data)
+            return lca(root.left, v1, v2);
+
+        return root;
+    }
 ```
 
-[Java Solution]() | 
+[Java Solution](week4/bstlowestcommonancestor/Solution.java) | 
 
 ---
 
