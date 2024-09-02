@@ -26,17 +26,18 @@ class Result {
         List<Integer> result = new ArrayList<>();
         for (int d : queries) {
             int min = Integer.MAX_VALUE;
-
-            for (int i = 0; i <= arr.size() - d; i++) {
+            int index = 0;
+            while (index <= arr.size() - d) {
                 int max = Integer.MIN_VALUE;
-                int upper = i + d;
+                int upper = index + d;
 
-                for (int j = i; j < upper; j++) {
+                for (int j = index; j < upper; j++) {
                     if (max < arr.get(j)) {
                         max = arr.get(j);
-                        i = j; // jump to index of max value
                     }
+                    index += j;
                 }
+
                 if (min > max) {
                     min = max;
                 }

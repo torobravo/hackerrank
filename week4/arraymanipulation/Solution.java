@@ -22,6 +22,21 @@ class Result {
      * 1. INTEGER n
      * 2. 2D_INTEGER_ARRAY queries
      */
+/*
+|             |      optimal approach       |       |
+| array index | [1,5,3] | [4,8,7] | [6,9,1] | Total |
+|    1        |    3    |         |         |   3   |
+|    2        |         |         |         |       |
+|    3        |         |         |         |       |
+|    4        |         |    7    |         |   7   |
+|    5        |   -3    |         |         |  -3   |
+|    6        |         |         |    1    |   1   |
+|    7        |         |         |         |       |
+|    8        |         |         |         |       |
+|    9        |         |   -7    |         |  -7   |
+|    10       |         |         |         |       |
+|    10+1     |         |         |   -1    |  -1   |
+ */
 
     public static long arrayManipulation(int n, List<List<Integer>> queries) {
         Map<Integer, Long> sum = new TreeMap<>(); // order by key
