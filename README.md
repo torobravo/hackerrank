@@ -1844,23 +1844,125 @@ Starting with a 1-indexed array of zeros and a list of operations, for each oper
 
 ---
 
-### [Highest Value Palindrome]()
+### [Highest Value Palindrome](https://www.hackerrank.com/challenges/one-month-preparation-kit-richie-rich/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four)
+Palindromes are strings that read the same from the left or right, for example madam or 0110.
 
+You will be given a string representation of a number and a maximum number of changes you can make. Alter the string, one digit at a time, to create the string representation of the largest number possible given the limit to the number of changes. The length of the string may not be altered, so you must consider
+0's left of all higher digits in your tests. For example 0110 is valid, 0011 is not.
+
+Given a string representing the starting number, and a maximum number of changes allowed, create the largest palindromic string of digits possible or the string '-1' if it is not possible to create a palindrome under the contstraints. 
 ```Java
+    public static String highestValuePalindrome(String s, int n, int k) {
+        StringBuilder sb = new StringBuilder(s);
+        int mismatch = 0;
+
+        // find all mismatch chars in string
+        for (int i = 0; i < n / 2; i++) {
+            if (sb.charAt(i) != sb.charAt(n - i - 1))
+                mismatch++;
+        }
+
+        // more mismatches than allowed changes
+        if (mismatch > k)
+            return "-1";
+
+        int remain = k - mismatch; // remaining extra changes
+
+        for (int i = 0; i < n / 2; i++) {
+            char left = sb.charAt(i);
+            char right = sb.charAt(n - i - 1);
+
+            if (left == right) {
+                if (left != '9' && remain >= 2) {
+                    sb.setCharAt(i, '9');
+                    sb.setCharAt(n - i - 1, '9');
+                    remain -= 2;
+                }
+            } else {
+                if (left != '9' && right != '9' && remain > 0) {
+                    sb.setCharAt(i, '9');
+                    sb.setCharAt(n - i - 1, '9');
+                    remain -= 1;
+                } else {
+                    if (left > right) {
+                        sb.setCharAt(n - i - 1, left);
+                    } else {
+                        sb.setCharAt(i, right);
+                    }
+                }
+            }
+        }
+
+        if (n % 2 == 1 && remain > 0) {
+            sb.setCharAt(n / 2, '9');
+        }
+
+        return sb.toString();
+    }
 
 ```
 
-[Java Solution]() | 
+[Java Solution](week4/highestvaluepalindrome/Solution.java) | 
 
 ---
 
-### [Lily's Homework]()
+### [Lily's Homework](https://www.hackerrank.com/challenges/one-month-preparation-kit-lilys-homework/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four)
+Whenever George asks Lily to hang out, she's busy doing homework. George wants to help her finish it faster, but he's in over his head! Can you help George understand Lily's homework so she can hang out with him?
 
+Consider an array of n distinct integers, *arr = [a[0], a[1],...,a[n-1]]*. George can swap any two elements of the array any number of times. An array is beautiful if the sum of *|arr[i] - arr[i-1]|* among *0 < i < n* is minimal.
+
+Given the array *arr*, determine and return the minimum number of swaps that should be performed in order to make the array beautiful.
 ```Java
+    public static int lilysHomework(List<Integer> arr) {
+        int swaps_asc = 0;
+        int swaps_desc = 0;
 
+        Map<Integer, Integer> map1 = new HashMap<>();
+        Map<Integer, Integer> map2 = new HashMap<>();
+
+        for (int i = 0; i < arr.size(); i++) {
+            map1.put(arr.get(i), i);
+            map2.put(arr.get(i), i);
+        }
+
+        List<Integer> arr2 = new ArrayList<>(arr);
+
+        List<Integer> list_asc = new ArrayList<>(arr);
+        Collections.sort(list_asc);
+
+        int n = arr.size();
+
+        for (int i = 0; i < arr.size(); i++) {
+            if (list_asc.get(i) != arr.get(i)) {
+                int index = map1.get(list_asc.get(i));
+
+                map1.put(arr.get(i), index);
+                map1.put(list_asc.get(i), i);
+
+                arr.set(index, arr.get(i));
+                arr.set(i, list_asc.get(i));
+
+                swaps_asc++;
+            }
+
+            if (list_asc.get(n - i - 1) != arr2.get(i)) {
+                int index = map2.get(list_asc.get(n - i - 1));
+
+                map2.put(arr2.get(i), index);
+                map2.put(list_asc.get(n - i - 1), i);
+
+                arr2.set(index, arr2.get(i));
+                arr2.set(i, list_asc.get(n - i - 1));
+
+                swaps_desc++;
+            }
+        }
+
+        return Math.min(swaps_asc, swaps_desc);
+    }
 ```
 
-[Java Solution]() | 
+[Java Solution](week4/lilyshomework/Solution.java) | 
 
 ---
 
@@ -1935,33 +2037,245 @@ You are given pointer to the root of the binary search tree and two values *v1* 
 
 ---
 
-### [No Prefix Set]()
+### [No Prefix Set](https://www.hackerrank.com/challenges/one-month-preparation-kit-no-prefix-set/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four)
+There is a given list of strings where each string contains only lowercase letters from *a-j*, inclusive. The set of strings is said to be a GOOD SET if no string is a prefix of another string. In this case, print GOOD SET. Otherwise, print BAD SET on the first line followed by the string being checked.
 
+Note If two strings are identical, they are prefixes of each other.
 ```Java
+    public static void noPrefix(List<String> words) {
+        Trie trie = new Trie();
+        for (String word : words) {
+            if (!trie.insertNoDuplicates(word)) {
+                System.out.println("BAD SET");
+                System.out.println(word);
+                return;
+            }
+        }
+
+        System.out.println("GOOD SET");
+    }
+
+    static class Trie {
+        static class TrieNode {
+            TrieNode[] child;
+            boolean isEndOfword;
+
+            public TrieNode() {
+                child = new TrieNode[26];
+                isEndOfword = false;
+            }
+        }
+
+        TrieNode root;
+
+        public Trie() {
+            root = new TrieNode();
+        }
+
+        public boolean insertNoDuplicates(String word) {
+            TrieNode curr = root;
+            for (int i = 0; i < word.length(); i++) {
+                int index = word.charAt(i) - 'a';
+
+                // check if already contains a complete word
+                if (curr.child[index] != null && curr.child[index].isEndOfword)
+                    return false;
+
+                // check if current word is a complete word
+                if (curr.child[index] != null && i == word.length() - 1)
+                    return false;
+
+                if (curr.child[index] == null)
+                    curr.child[index] = new TrieNode();
+
+                curr = curr.child[index];
+            }
+            curr.isEndOfword = true;
+
+            return true;
+        }
+    }
 
 ```
 
-[Java Solution]() | 
+[Java Solution](week4/noprefixset/Solution.java) | 
 
 ---
 
-### [Castle on the Grid]()
-
+### [Castle on the Grid](https://www.hackerrank.com/challenges/one-month-preparation-kit-castle-on-the-grid/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four)
+You are given a square grid with some cells open (.) and some blocked (X). Your playing piece can move along any row or column until it reaches the edge of the grid or a blocked cell. Given a grid, a start and a goal, determine the minmum number of moves to get to the goal. 
 ```Java
+    public static int minimumMoves(List<String> grid, int startX, int startY, int goalX, int goalY) {
 
+        int[][] neighbours = { { 0, -1 }, { 0, 1 }, { 1, 0 }, { -1, 0 } };
+        int rows = grid.size();
+        int cols = grid.get(0).length();
+
+        boolean[][] visited = new boolean[rows][cols];
+        Node[][] previous = new Node[rows][cols];
+        Queue<Node> q = new LinkedList<>();
+
+        visited[startX][startY] = true;
+        q.offer(new Node(startX, startY));
+
+        while (!q.isEmpty()) {
+            Node current = q.poll();
+
+            for (int[] neighbour : neighbours) {
+                int nextX = current.x;
+                int nextY = current.y;
+
+                while (true) {
+                    nextX += neighbour[0];
+                    nextY += neighbour[1];
+
+                    // guard out of bounds
+                    if ((nextX < 0 || nextX >= rows) || nextY < 0 || nextY >= cols)
+                        break;
+
+                    // if blocked, stop and continue next direction
+                    boolean isBlocked = grid.get(nextX).charAt(nextY) == 'X';
+                    if (isBlocked)
+                        break;
+
+                    // if not visited
+                    if (!visited[nextX][nextY]) {
+                        Node newNode = new Node(nextX, nextY);
+                        visited[nextX][nextY] = true;
+                        previous[nextX][nextY] = current;
+                        q.offer(newNode);
+                    }
+
+                    // if found, count previous nodes and exits
+                    if (nextX == goalX && nextY == goalY) {
+                        int counter = 0;
+                        Node node = previous[goalX][goalY];
+                        while (node != null) {
+                            node = previous[node.x][node.y];
+                            counter++;
+                        }
+
+                        return counter;
+                    }
+                }
+            }
+        }
+
+        return -1;
+
+    }
+
+    static class Node {
+        int x;
+        int y;
+
+        public Node(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
 ```
 
-[Java Solution]() | 
+[Java Solution](week4/castlegrid/Solution.java) | 
 
 ---
 
-### [Roads and Libraries]()
+### [Roads and Libraries](https://www.hackerrank.com/interview/preparation-kits/one-month-preparation-kit/one-month-week-four/challenges](https://www.hackerrank.com/challenges/one-month-preparation-kit-torque-and-development/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four))
+Determine the minimum cost to provide library access to all citizens of HackerLand. There are *n* cities numbered from *1* to *n*. Currently there are no libraries and the cities are not connected. Bidirectional roads may be built between any city pair listed in *cities*. A citizen has access to a library if:
+
+* Their city contains a library.
+* They can travel by road from their city to a city containing a library.
+
+Example
+
+The following figure is a sample map of HackerLand where the dotted lines denote possible roads:
+
+![Alt text](resources/graph1.png)
+
+The cost of building any road is *cc_road = 2* , and the cost to build a library in any city is *cc_lib = 3*. Build 5 roads at a cost of *5 x 2 = 10* and 2 libraries for a cost of *6*. One of the available roads in the cycle *1 --> 2 --> 3 --> 1* is not necessary. 
 
 ```Java
+    public static long roadsAndLibraries(int n, int c_lib, int c_road, List<List<Integer>> cities) {
+        // If the cost of road is greater than a library
+        // then it is better to build a library in each city
+        if (c_road >= c_lib)
+            return (long) n * c_lib;
+
+        int roadCount = 0;
+        UnionFind uf = new UnionFind(n);
+
+        for (List<Integer> edge : cities) {
+            int from = edge.get(0) - 1; // starts at index 0
+            int to = edge.get(1) - 1; // starts at index 0
+
+            if (!uf.isConnected(from, to)) {
+                uf.union(from, to);
+                roadCount++; // build a new road
+            }
+        }
+
+        // count all disjoint sets
+        int components = uf.getComponents();
+
+        // build a library for each component and
+        // add the cost of each road
+        long result = (long) components * c_lib + (long) roadCount * c_road;
+
+        return result;
+    }
+
+    static class UnionFind {
+        int[] parent;
+        int disjointSets;
+
+        public UnionFind(int n) {
+            parent = new int[n];
+            disjointSets = n;
+            // Initialize the parent array with each element
+            // as its own representative
+            for (int i = 0; i < n; i++) {
+                parent[i] = i;
+            }
+        }
+
+        // Find the rep (root) of the set that includes element i
+        public int find(int i) {
+            // I am the parent
+            if (parent[i] == i)
+                return i;
+
+            // Recursively find the rep of the parent until reaching the root
+            parent[i] = find(parent[i]); // Path-compression
+            return parent[i];
+        }
+
+        // Determines if element i and j are in the same set
+        public boolean isConnected(int i, int j) {
+            return find(i) == find(j);
+        }
+
+        public void union(int i, int j) {
+            int rootI = find(i);
+            int rootJ = find(j);
+
+            // if the same root, then they are in the same set
+            if (rootI == rootJ)
+                return;
+            // Sets the parent to either set
+            parent[rootI] = rootJ;
+
+            // we have one less component or set
+            disjointSets--;
+        }
+
+        public int getComponents() {
+            return disjointSets;
+        }
+    }
 
 ```
 
-[Java Solution]() | 
+[Java Solution](week4/roadslibraries/Solution.java) | 
 
 ---
 
