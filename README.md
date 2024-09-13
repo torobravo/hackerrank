@@ -2278,11 +2278,219 @@ The cost of building any road is *cc_road = 2* , and the cost to build a library
 [Java Solution](week4/roadslibraries/Solution.java) | 
 
 ---
+### Mock Test
 
+#### [Breadth First Search: Shortest Reach](https://www.hackerrank.com/challenges/bfsshortreach/problem)
+Consider an undirected graph where each edge weighs 6 units. Each of the nodes is labeled consecutively from 1 to n.
 
+You will be given a number of queries. For each query, you will be given a list of edges describing an undirected graph. After you create a representation of the graph, you must determine and report the shortest distance to each of the other nodes from a given starting position using the breadth-first search algorithm (BFS). Return an array of distances from the start node in node number order. If a node is unreachable, return -1 for that node. 
 
+```Java
+    public static List<Integer> bfs(int n, int m, List<List<Integer>> edges, int s) {
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            graph.add(new LinkedList<>());
+        }
 
+        for (List<Integer> edge : edges) {
+            int src = edge.get(0) - 1; // index 0
+            int dst = edge.get(1) - 1; // index 0
+            graph.get(src).add(dst);
+            graph.get(dst).add(src);
+        }
 
+        List<Integer> distance = new ArrayList<>(Collections.nCopies(n, Integer.MAX_VALUE));
+        PriorityQueue<Integer> queue = new PriorityQueue<>();
+        queue.add(s - 1);
+        distance.set(s - 1, 0);
+
+        while (!queue.isEmpty()) {
+            int u = queue.poll();
+            for (Integer v : graph.get(u)) {
+                if (distance.get(u) + 6 < distance.get(v)) {
+                    distance.set(v, distance.get(u) + 6);
+                    queue.add(v);
+                }
+            }
+        }
+        distance.replaceAll(ele -> ele == Integer.MAX_VALUE ? -1 : ele);
+        distance.removeIf(ele -> ele == 0);
+        return distance;
+    }
+```
+
+[Java Solution](week4/mock/bfs/Solution.java) 
+
+---
+
+#### [Components in a graph](https://www.hackerrank.com/challenges/components-in-graph/problem)
+There are *2 x N* nodes in an undirected graph, and a number of edges connecting some nodes. In each edge, the first value will be between 1 and N, inclusive. The second node will be between *N + 1* and *2 x N*, inclusive. Given a list of edges, determine the size of the smallest and largest connected components that have 2 or more nodes. A node can have any number of connections. The highest node value will always be connected to at least 1 other node.
+
+Note Single nodes should not be considered in the answer. 
+
+```Java
+    public static List<Integer> componentsInGraph(List<List<Integer>> gb) {
+        int maxNodes = Integer.MIN_VALUE;
+
+        for (List<Integer> edge : gb) {
+            maxNodes = Math.max(maxNodes, edge.get(1));
+        }
+
+        UnionFind uf = new UnionFind(maxNodes);
+
+        for (List<Integer> edge : gb) {
+            int left = edge.get(0) - 1;
+            int right = edge.get(1) - 1;
+            uf.union(left, right);
+        }
+
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+
+        for (Integer i : uf.size) {
+            if (i <= 1)
+                continue;
+            min = Math.min(min, i);
+            max = Math.max(max, i);
+        }
+
+        return Arrays.asList(min, max);
+    }
+
+    static class UnionFind {
+        int[] parents;
+        int[] size;
+
+        public UnionFind(int n) {
+            parents = new int[n];
+            size = new int[n];
+            for (int i = 0; i < n; i++) {
+                parents[i] = i;
+                size[i] = 1;
+            }
+
+        }
+
+        public int find(int i) {
+            if (parents[i] == i)
+                return i;
+
+            parents[i] = find(parents[i]);
+
+            return parents[i];
+        }
+
+        public void union(int i, int j) {
+            int irep = find(i);
+            int jrep = find(j);
+
+            if (irep == jrep)
+                return;
+
+            int isize = size[irep];
+            int jsize = size[jrep];
+
+            if (isize < jsize) {
+                parents[irep] = jrep;
+                size[jrep] += size[irep];
+                size[irep] = 0;
+            } else {
+                parents[jrep] = irep;
+                size[irep] += size[jrep];
+                size[jrep] = 0;
+            }
+
+            return;
+        }
+    }
+```
+
+[Java Solution](week4/mock/componentsingraph/Solution.java) 
+
+---
+
+#### [Cut the tree](https://www.hackerrank.com/challenges/cut-the-tree/problem)
+There is an undirected tree where each vertex is numbered from 1 to n, and each contains a data value. The sum of a tree is the sum of all its nodes' data values. If an edge is cut, two smaller trees are formed. The difference between two trees is the absolute value of the difference in their sums.
+
+Given a tree, determine which edge to cut so that the resulting trees have a minimal difference between them, then return that difference.
+
+Example
+*data = [1,2,3,4,5,6]*
+*edges = [(1,2),(1,3),(2,6),(3,4),(3,5)]*
+
+In this case, node numbers match their weights for convenience. The graph is shown below. 
+
+![Alt text](resources/graph2.png)
+
+The values are calculated as follows: 
+```
+Edge    Tree 1  Tree 2  Absolute
+Cut     Sum      Sum     Difference
+1        8         13         5
+2        9         12         3
+3        6         15         9
+4        4         17        13
+5        5         16        11
+```
+The minimum absolute difference is 3.
+
+Note: The given tree is always rooted at vertex 1. 
+
+```Java
+    public static int cutTheTree(List<Integer> data, List<List<Integer>> edges) {
+        int totalSum = 0;
+        int diff = Integer.MAX_VALUE;
+        // Create Graph
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        for (int i = 0; i < data.size(); i++) {
+            graph.put(i + 1, new ArrayList<>());
+            totalSum += data.get(i);
+        }
+        for (List<Integer> edge : edges) {
+            int u = edge.get(0);
+            int v = edge.get(1);
+            graph.get(u).add(v);
+            graph.get(v).add(u);
+        }
+
+        // DFS
+        Set<Integer> visited = new HashSet<>();
+        Stack<Integer> stack = new Stack<>();
+        Map<Integer, Integer> cum_weight = new HashMap<>();
+        Map<Integer, Integer> child_parent = new HashMap<>();
+
+        // visited.add(1);
+        stack.add(1);
+
+        while (!stack.isEmpty()) {
+            int vertex = stack.peek();
+
+            if (visited.contains(vertex)) {
+                cum_weight.put(vertex, data.get(vertex - 1));
+                for (Integer c : graph.get(vertex)) {
+                    if (child_parent.getOrDefault(c, -1) == vertex)
+                        cum_weight.put(vertex, cum_weight.get(vertex) + cum_weight.get(c));
+                }
+                diff = Math.min(diff, Math.abs(totalSum - 2 * cum_weight.get(vertex)));
+                stack.pop();
+                continue;
+            }
+
+            visited.add(vertex);
+            for (Integer neighbor : graph.get(vertex)) {
+                if (!visited.contains(neighbor)) {
+                    child_parent.put(neighbor, vertex);
+                    stack.add(neighbor);
+                }
+            }
+        }
+        return diff;
+    }
+```
+
+[Java Solution](week4/mock/cutthetree/Solution.java)
+
+---
 
 
 
