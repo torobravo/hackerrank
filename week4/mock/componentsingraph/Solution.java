@@ -22,7 +22,6 @@ class Result {
      */
 
     public static List<Integer> componentsInGraph(List<List<Integer>> gb) {
-
         int maxNodes = Integer.MIN_VALUE;
 
         for (List<Integer> edge : gb) {
@@ -37,13 +36,10 @@ class Result {
             uf.union(left, right);
         }
 
-        System.out.println("components " + uf.disjointSets);
-
         int min = Integer.MAX_VALUE;
         int max = Integer.MIN_VALUE;
 
         for (Integer i : uf.size) {
-            System.out.print(i + " ");
             if (i <= 1)
                 continue;
             min = Math.min(min, i);
@@ -55,11 +51,9 @@ class Result {
 
     static class UnionFind {
         int[] parents;
-        int disjointSets;
         int[] size;
 
         public UnionFind(int n) {
-            disjointSets = n;
             parents = new int[n];
             size = new int[n];
             for (int i = 0; i < n; i++) {
@@ -70,11 +64,11 @@ class Result {
         }
 
         public int find(int i) {
-            if (parents[i] != i) {
-                // Path compression: Make the parent of i the
-                // root of the set
-                parents[i] = find(parents[i]);
-            }
+            if (parents[i] == i)
+                return i;
+
+            parents[i] = find(parents[i]);
+
             return parents[i];
         }
 
@@ -91,14 +85,12 @@ class Result {
             if (isize < jsize) {
                 parents[irep] = jrep;
                 size[jrep] += size[irep];
-                size[irep] = 1;
+                size[irep] = 0;
             } else {
                 parents[jrep] = irep;
                 size[irep] += size[jrep];
-                size[jrep] = 1;
+                size[jrep] = 0;
             }
-
-            disjointSets--;
 
             return;
         }
