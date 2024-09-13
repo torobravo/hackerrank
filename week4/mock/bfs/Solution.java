@@ -26,86 +26,36 @@ class Result {
      */
 
     public static List<Integer> bfs(int n, int m, List<List<Integer>> edges, int s) {
-        Graph graph = new Graph(n);
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            graph.add(new LinkedList<>());
+        }
 
         for (List<Integer> edge : edges) {
-            int src = edge.get(0) - 1;
-            int dest = edge.get(1) - 1;
-
-            graph.addEdge(src, dest, 6);
+            int src = edge.get(0) - 1; // index 0
+            int dst = edge.get(1) - 1; // index 0
+            graph.get(src).add(dst);
+            graph.get(dst).add(src);
         }
 
-        return graph.dijkstra(s - 1);
-    }
+        List<Integer> distance = new ArrayList<>(Collections.nCopies(n, Integer.MAX_VALUE));
+        PriorityQueue<Integer> queue = new PriorityQueue<>();
+        queue.add(s - 1);
+        distance.set(s - 1, 0);
 
-    static class Graph {
-        private int v;
-        private LinkedList<Node>[] adjList;
-
-        static class Node implements Comparable<Node> {
-            int vertex;
-            int weight;
-
-            public Node(int v, int w) {
-                vertex = v;
-                weight = w;
-            }
-
-            @Override
-            public int compareTo(Node o) {
-                return this.weight - o.weight;
-            }
-
-        }
-
-        public Graph(int v) {
-            this.v = v;
-            this.adjList = new LinkedList[v];
-            for (int i = 0; i < v; i++) {
-                adjList[i] = new LinkedList<>();
-            }
-        }
-
-        public void addEdge(int src, int dest, int weight) {
-            adjList[src].add(new Node(dest, weight));
-            adjList[dest].add(new Node(src, weight));
-        }
-
-        public List<Integer> dijkstra(int src) {
-            PriorityQueue<Node> pq = new PriorityQueue<>();
-            int[] dist = new int[v];
-            Arrays.fill(dist, Integer.MAX_VALUE);
-            dist[src] = 0;
-
-            pq.add(new Node(src, 6));
-
-            while (!pq.isEmpty()) {
-                Node currentNode = pq.poll();
-                int u = currentNode.vertex;
-
-                for (Node neighbor : adjList[u]) {
-                    int v = neighbor.vertex;
-                    int weight = neighbor.weight;
-
-                    if (dist[u] + weight < dist[v]) {
-                        dist[v] = dist[u] + weight;
-                        pq.add(new Node(v, dist[v]));
-                    }
+        while (!queue.isEmpty()) {
+            int u = queue.poll();
+            for (Integer v : graph.get(u)) {
+                if (distance.get(u) + 6 < distance.get(v)) {
+                    distance.set(v, distance.get(u) + 6);
+                    queue.add(v);
                 }
             }
-            List<Integer> result = new ArrayList<>();
-            for (int i = 1; i < dist.length; i++) {
-                if (dist[i] < Integer.MAX_VALUE)
-                    result.add(dist[i]);
-                else
-                    result.add(-1);
-            }
-
-            return result;
         }
-
+        distance.replaceAll(ele -> ele == Integer.MAX_VALUE ? -1 : ele);
+        distance.removeIf(ele -> ele == 0);
+        return distance;
     }
-
 }
 
 public class Solution {
