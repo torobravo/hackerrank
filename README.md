@@ -652,7 +652,7 @@ Return the number of x's satisfying the criteria.
 ---
 ### Mock Test
 
-#### [Palindrome Index]
+#### [Palindrome Index](https://www.hackerrank.com/challenges/palindrome-index/problem?isFullScreen=true)
 Given a string of lowercase letters in the range ascii[a-z], determine the index of a character that can be
 removed to make the string a palindrome. There may be more than one solution, but any will do. If the word
 is already a palindrome or there is no solution, return -1. Otherwise, return the index of a character to
@@ -660,27 +660,22 @@ remove.
 
 ```Java
     public static int palindromeIndex(String s) {
-        int start = 0;
-        int end = s.length() - 1;
-        do {
-            if (s.charAt(start) != s.charAt(end)) {
-                if (isPalindrome(s, start + 1, end))
-                    return start;
-
-                return end;
+        for(int i = 0; i < s.length() / 2; i++) {
+            if (s.charAt(i) != s.charAt(s.length() - i - 1)) {
+                // validate if it is a palindrome by removing last char
+                if(isPalindrome(s, i, s.length() - i - 2))
+                    return s.length() - i - 1;
+                return i;
             }
-        } while (start++ < end--);
-
+        }
         return -1;
     }
-
+    
     private static boolean isPalindrome(String s, int start, int end) {
-        do {
-            if (s.charAt(start) != s.charAt(end)) {
+        while(start++ < end--) {
+            if (s.charAt(start) != s.charAt(end))
                 return false;
-            }
-        } while (start++ < end--);
-
+        }
         return true;
     }
 ```
