@@ -1,4 +1,4 @@
-package dsa.breadthfirstsearch;
+package dsa.bfs;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Solution {
+public class Solution2 {
 
     static class Graph {
         int vertices; // Number of vertices in the graph

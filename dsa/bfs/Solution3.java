@@ -1,8 +1,8 @@
-package dsa.shortestpathbfs;
+package dsa.bfs;
 
 import java.util.*;
 
-public class Solution {
+public class Solution3 {
     // Modified bfs to store the parent of nodes along with
     // the distance from the source node
     static void bfs(List<List<Integer>> graph, int S,
