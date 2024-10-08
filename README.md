@@ -892,18 +892,18 @@ Sherlock considers a string to be valid if all characters of the string appear t
             charMap.put(ch, charMap.getOrDefault(ch, 0) + 1);
         }
 
-        int maxFreq = charMap.get(s.charAt(0));
-        int remove = 0;
+        List<Integer> list = new ArrayList<>(charMap.values());
+        Collections.sort(list);
 
-        for (Integer val : charMap.values()) {
-            if (maxFreq != val) {
-                remove += 1;
-                if (remove > 1) {
-                    return "NO";
-                }
-            }
+        if (s.length() == 1)
+            return "YES";
 
-        }
+        if (list.get(0) == 1)
+            return list.get(1) != Collections.max(list) ? "NO" : "YES";
+
+        if (Collections.max(list) - Collections.min(list) > 1)
+            return "NO";
+
         return "YES";
     }
 ```
@@ -1070,17 +1070,11 @@ Two friends like to pool their money and go to the ice cream parlor. They always
 Given a list of prices for the flavors of ice cream, select the two that will cost all of the money they have. 
 ```Java
     public static List<Integer> icecreamParlor(int m, List<Integer> arr) {
-        for (int i = 0; i < arr.size() - 1; i++) {
-            if (arr.get(i) >= m)
-                continue;
-
-            for (int j = i + 1; j < arr.size(); j++) {
-                if (arr.get(j) >= m)
-                    continue;
-
-                if (arr.get(i) + arr.get(j) == m)
-                    return Arrays.asList(i + 1, j + 1);
-            }
+        for (int f1 : arr) {
+            int index1 = arr.indexOf(f1);
+            int index2 = arr.lastIndexOf(m - f1);
+            if (index1 != index2 && index2 >= 0)
+                return Arrays.asList(index1 + 1, index2 + 1);
         }
         return new ArrayList<>();
     }
