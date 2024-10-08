@@ -25,17 +25,11 @@ class Result {
 
     public static List<Integer> icecreamParlor(int m, List<Integer> arr) {
 
-        for (int i = 0; i < arr.size() - 1; i++) {
-            if (arr.get(i) >= m)
-                continue;
-
-            for (int j = i + 1; j < arr.size(); j++) {
-                if (arr.get(j) >= m)
-                    continue;
-
-                if (arr.get(i) + arr.get(j) == m)
-                    return Arrays.asList(i + 1, j + 1);
-            }
+        for (int f1 : arr) {
+            int index1 = arr.indexOf(f1);
+            int index2 = arr.lastIndexOf(m - f1);
+            if (index1 != index2 && index2 >= 0)
+                return Arrays.asList(index1 + 1, index2 + 1);
         }
 
         return new ArrayList<>();

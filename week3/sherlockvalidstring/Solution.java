@@ -28,21 +28,19 @@ class Result {
             charMap.put(ch, charMap.getOrDefault(ch, 0) + 1);
         }
 
-        int maxFreq = charMap.get(s.charAt(0));
-        int remove = 0;
+        List<Integer> list = new ArrayList<>(charMap.values());
+        Collections.sort(list);
 
-        for (Integer val : charMap.values()) {
-            if (maxFreq != val) {
-                remove += 1;
-                if (remove > 1) {
-                    return "NO";
-                }
-            }
+        if (s.length() == 1)
+            return "YES";
 
-        }
+        if (list.get(0) == 1)
+            return list.get(1) != Collections.max(list) ? "NO" : "YES";
+
+        if (Collections.max(list) - Collections.min(list) > 1)
+            return "NO";
 
         return "YES";
-
     }
 }
 
