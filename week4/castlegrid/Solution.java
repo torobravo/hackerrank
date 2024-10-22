@@ -33,18 +33,19 @@ class Result {
         int cols = grid.get(0).length();
 
         boolean[][] visited = new boolean[rows][cols];
-        Node[][] previous = new Node[rows][cols];
-        Queue<Node> q = new LinkedList<>();
+        int[][][] previous = new int[rows][cols][2];
+        Queue<int[]> q = new LinkedList<>();
 
         visited[startX][startY] = true;
-        q.offer(new Node(startX, startY));
+        q.offer(new int[]{startX, startY});
+        previous[startX][startY] = new int[]{-1, -1};
 
         while (!q.isEmpty()) {
-            Node current = q.poll();
+            int[] current = q.poll();
 
             for (int[] neighbour : neighbours) {
-                int nextX = current.x;
-                int nextY = current.y;
+                int nextX = current[0];
+                int nextY = current[1];
 
                 while (true) {
                     nextX += neighbour[0];
@@ -61,7 +62,7 @@ class Result {
 
                     // if not visited
                     if (!visited[nextX][nextY]) {
-                        Node newNode = new Node(nextX, nextY);
+                        int[] newNode = new int[]{nextX, nextY};
                         visited[nextX][nextY] = true;
                         previous[nextX][nextY] = current;
                         q.offer(newNode);
@@ -70,9 +71,9 @@ class Result {
                     // if found, count previous nodes and exits
                     if (nextX == goalX && nextY == goalY) {
                         int counter = 0;
-                        Node node = previous[goalX][goalY];
-                        while (node != null) {
-                            node = previous[node.x][node.y];
+                        int[] node = previous[goalX][goalY];
+                        while (node[0] != -1 && node[1] != -1) {
+                            node = previous[node[0]][node[1]];
                             counter++;
                         }
 
@@ -83,25 +84,14 @@ class Result {
         }
 
         return -1;
-
     }
-
-    static class Node {
-        int x;
-        int y;
-
-        public Node(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-    }
-
 }
 
 public class Solution {
     public static void main(String[] args) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
+        //BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
+        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(System.out));
 
         int n = Integer.parseInt(bufferedReader.readLine().trim());
 

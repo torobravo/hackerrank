@@ -1,7 +1,5 @@
 package dsa.binarysearch;
 
-import java.lang.annotation.Target;
-
 public class Bitonic {
     /*
      * Consider a scenario where you're dealing with a dataset akin to a roller

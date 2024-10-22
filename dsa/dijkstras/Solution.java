@@ -61,7 +61,6 @@ public class Solution {
     public static void main(String[] args) {
         int nodes = 9;
         int start = 1;
-        int end = 7;
         List<List<Integer>> edges = Arrays.asList(
             Arrays.asList(0, 1, 4),
             Arrays.asList(0, 7, 8),

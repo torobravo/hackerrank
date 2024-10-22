@@ -57,6 +57,9 @@ class Result {
                     if (child_parent.getOrDefault(c, -1) == vertex)
                         cum_weight.put(vertex, cum_weight.get(vertex) + cum_weight.get(c));
                 }
+                // weight of small subtree = w1
+                // weight of large subtree = total - w1
+                // diff => large - small = (total - w1) - w1 = total - 2*w1
                 diff = Math.min(diff, Math.abs(totalSum - 2 * cum_weight.get(vertex)));
                 stack.pop();
                 continue;
