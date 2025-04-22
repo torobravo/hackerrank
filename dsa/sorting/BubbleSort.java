@@ -12,11 +12,13 @@ public class BubbleSort {
     // .-- Place greatest element to end of the array --.
     // Quadratic time O(n^2)
     static void bubbleSort(int[] arr) {
-        for(int i = 0; i < arr.length; i++) {
-            for(int j = i + 1; j < arr.length; j++) {
-                if (arr[i] > arr[j]) {
-                    int tmp = arr[i];
-                    arr[i] = arr[j];
+        for (int i = 0; i < arr.length - 1; i++) { // recorre todo el arreglo hasta el penultimo elemento
+
+            for (int j = 0; j < arr.length - 1 - i; j++) { // recorre todo el arreglo hasta el ultimo elemento
+                                                           // ordenado
+                if (arr[j] > arr[j + 1]) {
+                    int tmp = arr[j + 1];
+                    arr[j + 1] = arr[j];
                     arr[j] = tmp;
                 }
             }
@@ -24,8 +26,8 @@ public class BubbleSort {
     }
 
     public static void main(String[] args) {
-        int[] items = {9, 3, 1, 6, 8, 2, 5, 4, 7};
-        
+        int[] items = { 9, 3, 1, 6, 8, 2, 5, 4, 7 };
+
         bubbleSort(items);
 
         for (int songID : items) {

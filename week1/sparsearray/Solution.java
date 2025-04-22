@@ -26,12 +26,21 @@ class Result {
     public static List<Integer> matchingStrings(List<String> strings, List<String> queries) {
         // Write your code here
         List<Integer> result = new ArrayList<>();
+        Map<String, Integer> freqMap = getFrequency(strings);
         for (String q : queries) {
-            int freq = Collections.frequency(strings, q);
+            int freq = freqMap.getOrDefault(q, 0);
             result.add(freq);
         }
 
         return result;
+    }
+
+    private static Map<String, Integer> getFrequency(List<String> arrList) {
+        Map<String, Integer> freqMap = new HashMap<>();
+        for (String s : arrList) {
+            freqMap.put(s, freqMap.getOrDefault(s, 0) + 1);
+        }
+        return freqMap;
     }
 
 }

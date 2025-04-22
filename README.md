@@ -1,9 +1,13 @@
 # hackerrank
+
 HackerRank 1 month preparation kit solutions
 
 ## Week 1
+
 ### [Plus Minus](https://www.hackerrank.com/challenges/one-month-preparation-kit-plus-minus/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-one)
-Given an array of integers, calculate the ratios of its elements that are positive, negative, and zero. Print the decimal value of each fraction on a new line with 6 places after the decimal. 
+
+Given an array of integers, calculate the ratios of its elements that are positive, negative, and zero. Print the decimal value of each fraction on a new line with 6 places after the decimal.
+
 ```Java
     public static void plusMinus(List<Integer> arr) {
         int size = arr.size();
@@ -22,11 +26,14 @@ Given an array of integers, calculate the ratios of its elements that are positi
     }
 ```
 
-[Java Solution](week1/plusminus/Solution.java) | 
+[Java Solution](week1/plusminus/Solution.java) |
 
 ---
+
 ### [Mini-Max Sum](https://www.hackerrank.com/challenges/one-month-preparation-kit-mini-max-sum/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-one)
-Given five positive integers, find the minimum and maximum values that can be calculated by summing exactly four of the five integers. Then print the respective minimum and maximum values as a single line of two space-separated long integers. 
+
+Given five positive integers, find the minimum and maximum values that can be calculated by summing exactly four of the five integers. Then print the respective minimum and maximum values as a single line of two space-separated long integers.
+
 ```Java
     public static void miniMaxSum(List<Integer> arr) {
         long min = Long.MAX_VALUE, max = Long.MIN_VALUE, sum = 0;
@@ -42,8 +49,11 @@ Given five positive integers, find the minimum and maximum values that can be ca
 [Java Solution](week1/minimax/Solution.java) |
 
 ---
+
 ### [Time Conversion](https://www.hackerrank.com/challenges/one-month-preparation-kit-time-conversion/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-one)
-Given a time in 12-hour AM/PM format, convert it to military (24-hour) time. 
+
+Given a time in 12-hour AM/PM format, convert it to military (24-hour) time.
+
 ```Java
     public static String timeConversion(String s) {
         SimpleDateFormat inputFormat = new SimpleDateFormat("hh:mm:ssa");
@@ -59,24 +69,40 @@ Given a time in 12-hour AM/PM format, convert it to military (24-hour) time.
 [Java Solution](week1/timeconversion/Solution.java) |
 
 ---
+
 ### [Sparse Arrays](https://www.hackerrank.com/challenges/one-month-preparation-kit-sparse-arrays/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-one)
-There is a collection of input strings and a collection of query strings. For each query string, determine how many times it occurs in the list of input strings. Return an array of the results. 
+
+There is a collection of input strings and a collection of query strings. For each query string, determine how many times it occurs in the list of input strings. Return an array of the results.
+
 ```Java
     public static List<Integer> matchingStrings(List<String> strings, List<String> queries) {
         List<Integer> result = new ArrayList<>();
+        Map<String, Integer> freqMap = getFrequency(strings);
         for (String q : queries) {
-            int freq = Collections.frequency(strings, q);
+            int freq = freqMap.getOrDefault(q, 0);
             result.add(freq);
         }
+
         return result;
+    }
+
+    private static Map<String, Integer> getFrequency(List<String> arrList) {
+        Map<String, Integer> freqMap = new HashMap<>();
+        for (String s : arrList) {
+            freqMap.put(s, freqMap.getOrDefault(s, 0) + 1);
+        }
+        return freqMap;
     }
 ```
 
 [Java Solution](week1/sparsearray/Solution.java) |
 
 ---
+
 ### [Lonely Integer](https://www.hackerrank.com/challenges/one-month-preparation-kit-lonely-integer/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-one)
+
 Given an array of integers, where all elements but one occur twice, find the unique element.
+
 ```Java
     public static int lonelyinteger(List<Integer> a) {
         int result = 0;
@@ -90,19 +116,41 @@ Given an array of integers, where all elements but one occur twice, find the uni
 [Java Solution](week1/lonlyinteger/Solution.java) |
 
 ---
+
 ### [Flipping bits](https://www.hackerrank.com/challenges/one-month-preparation-kit-flipping-bits/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-one)
-You will be given a list of 32 bit unsigned integers. Flip all the bits (1->0 and 0->1) and return the result as an unsigned integer. 
-```Java
-    public static long flippingBits(long n) {
+
+You will be given a list of 32 bit unsigned integers. Flip all the bits (1->0 and 0->1) and return the result as an unsigned integer.
+
+````Java
+    /*
+         * 32-bit number can store 2^32 different values = 4,294,967,296
+         * **Signed 32-bit integer limit = -2,147,483,648 To 2,147,483,647
+         * **Unsigned 32-bit integer limit = 0 To 4,294,967,295
+         *
+         * 0 in 32-bit integer binary form is: (0000 0000 0000 0000 0000 0000 0000 0000)
+         * 1 in 32-bit integer binary form is: (0000 0000 0000 0000 0000 0000 0000 0001)
+         * 4294967295 in 32-bit binary form is:(1111 1111 1111 1111 1111 1111 1111 1111)
+         *
+         * (VAL) 0000 0000 0000 0000 0000 0000 0000 0000 0001 (1)
+         * (XOR) 1111 1111 1111 1111 1111 1111 1111 1111 1111 (4,294,967,295)
+         * ====================================================
+         * (RES) 1111 1111 1111 1111 1111 1111 1111 1111 1110 (4,294,967,294)
+         */
+
+        // return ~n & 0xffffffffL;
+        // return ~n & (1L << 32) - 1;
+        // return n ^ (1L << 32) - 1;
         return n ^ 0xffffffffL;
-    }
-```
+    ```
 
 [Java Solution](week1/flippingbits/Solution.java) |
 
 ---
+
 ### [Diagonal difference](https://www.hackerrank.com/challenges/one-month-preparation-kit-diagonal-difference/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-one)
-Given a square matrix, calculate the absolute difference between the sums of its diagonals. 
+
+Given a square matrix, calculate the absolute difference between the sums of its diagonals.
+
 ```Java
     public static int diagonalDifference(List<List<Integer>> arr) {
         int sz = arr.size();
@@ -113,13 +161,16 @@ Given a square matrix, calculate the absolute difference between the sums of its
         }
         return Math.abs(sum_lr - sum_rl);
     }
-```
+````
 
 [Java Solution](week1/diagonaldiff/Solution.java) |
 
 ---
+
 ### [Counting sort](https://www.hackerrank.com/challenges/one-month-preparation-kit-countingsort1/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-one)
+
 **Alternative Sorting:** Another sorting method, the counting sort, does not require comparison. Instead, you create an integer array whose index range covers the entire range of values in your array to sort. Each time a value occurs in the original array, you increment the counter at that index. At the end, run through your counting array, printing the value of each non-zero valued index that number of times.
+
 ```Java
     public static List<Integer> countingSort(List<Integer> arr) {
         // Create an array filled with 100 0's
@@ -134,8 +185,11 @@ Given a square matrix, calculate the absolute difference between the sums of its
 [Java Solution](week1/countingsort/Solution.java) |
 
 ---
+
 ### [Pangrams](https://www.hackerrank.com/challenges/one-month-preparation-kit-pangrams/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-one)
+
 A pangram is a string that contains every letter of the alphabet. Given a sentence determine whether it is a pangram in the English alphabet. Ignore case. Return either pangram or not pangram as appropriate.
+
 ```Java
     public static String pangrams(String s) {
         for (char letter = 'a'; letter <= 'z'; letter++) {
@@ -149,8 +203,10 @@ A pangram is a string that contains every letter of the alphabet. Given a senten
 [Java Solution](week1/pangrams/Solution.java) |
 
 ---
+
 ### [Permute two arrays](https://www.hackerrank.com/challenges/one-month-preparation-kit-two-arrays/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-one)
-There are two n-element arrays of integers, A and B. Permute them into some A' and B' such that the relation A'[i] + B'[i] >= k holds for all i where 0<=i<=n. There will be q queries consisting of A, B, and k. For each query, return YES if some permutation A', B' satisfying the relation exists. Otherwise, return NO. 
+
+There are two n-element arrays of integers, A and B. Permute them into some A' and B' such that the relation A'[i] + B'[i] >= k holds for all i where 0<=i<=n. There will be q queries consisting of A, B, and k. For each query, return YES if some permutation A', B' satisfying the relation exists. Otherwise, return NO.
 
 ```Java
   public static String twoArrays(int k, List<Integer> A, List<Integer> B) {
@@ -167,7 +223,9 @@ There are two n-element arrays of integers, A and B. Permute them into some A' a
 [Java Solution](week1/permutearrays/Solution.java) |
 
 ---
+
 ### [Subarray division](https://www.hackerrank.com/challenges/one-month-preparation-kit-the-birthday-bar/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-one)
+
 Two children, Lily and Ron, want to share a chocolate bar. Each of the squares has an integer on it.
 Lily decides to share a contiguous segment of the bar selected such that:
 
@@ -196,7 +254,9 @@ Determine how many ways she can divide the chocolate.
 [Java Solution](week1/subarraydivision/Solution.java) |
 
 ---
+
 ### [XOR Strings](https://www.hackerrank.com/challenges/one-month-preparation-kit-strings-xor/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-one)
+
 Given two strings consisting of digits 0 and 1 only, find the XOR of the two strings.
 
 ```Java
@@ -215,9 +275,11 @@ Given two strings consisting of digits 0 and 1 only, find the XOR of the two str
 [Java Solution](week1/xorstrings/Solution.java) |
 
 ---
+
 ### Mock Test
 
 #### [Find the median]
+
 The median of a list of numbers is essentially its middle element after sorting. The same number of
 elements occur after it as before. Given a list of numbers with an odd number of elements, find the median?
 
@@ -230,6 +292,7 @@ elements occur after it as before. Given a list of numbers with an odd number of
 ```
 
 #### [Flipping the Matrix]
+
 Sean invented a game involving a **2n x 2n** matrix where each cell of the matrix contains an integer. He
 can reverse any of its rows or columns any number of times. The goal of the game is to maximize the sum
 of the elements in the **n x n** submatrix located in the upper-left quadrant of the matrix.
@@ -251,10 +314,13 @@ best possible way so that the sum of the elements in the matrix's upper-left qua
         return totalSum;
     }
 ```
+
 ---
+
 ## Week 2
 
 ### [Sales by Match](https://www.hackerrank.com/challenges/one-month-preparation-kit-sock-merchant/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-two)
+
 There is a large pile of socks that must be paired by color. Given an array of integers representing the color of each sock, determine how many pairs of socks with matching colors there are.
 
 ```Java
@@ -274,9 +340,11 @@ There is a large pile of socks that must be paired by color. Given an array of i
 [Java Solution](week2/salesbymatch/Solution.java) |
 
 ---
+
 ### [Zig Zag Sequence](https://www.hackerrank.com/challenges/one-month-preparation-kit-zig-zag-sequence/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-two)
+
 In this challenge, the task is to debug the existing code to successfully execute all provided test files.
-Given an array of distinct integers, transform the array into a zig zag sequence by permuting the array elements. A sequence will be called a zig zag sequence if the first elements in the sequence are in increasing order and the last elements are in decreasing order, where *k=(n+1)/2* . You need to find the lexicographically smallest zig zag sequence of the given array.
+Given an array of distinct integers, transform the array into a zig zag sequence by permuting the array elements. A sequence will be called a zig zag sequence if the first elements in the sequence are in increasing order and the last elements are in decreasing order, where _k=(n+1)/2_ . You need to find the lexicographically smallest zig zag sequence of the given array.
 
 ```Java
     public static void findZigZagSequence(int[] a, int n) {
@@ -307,12 +375,14 @@ Given an array of distinct integers, transform the array into a zig zag sequence
 [Java Solution](week2/zigzag/Main.java) |
 
 ---
+
 ### [Drawing Book](https://www.hackerrank.com/challenges/one-month-preparation-kit-drawing-book/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-two)
+
 A teacher asks the class to open their books to a page number. A student can either start turning pages from the front of the book or from the back of the book. They always turn pages one at a time. When they open the book, page 1 is always on the right side:
 
 When they flip page 1, they see pages 2 and 3. Each page except the last page will always be printed on both sides. The last page may only be printed on the front, given the length of the book. If the book is n pages long, and a student wants to turn to page p, what is the minimum number of pages to turn? They can start at the beginning or the end of the book.
 
-Given n and p, find and print the minimum number of pages that must be turned in order to arrive at page p. 
+Given n and p, find and print the minimum number of pages that must be turned in order to arrive at page p.
 
 ```Java
     public static int pageCount(int n, int p) {
@@ -327,15 +397,18 @@ Given n and p, find and print the minimum number of pages that must be turned in
 [Java Solution](week2/drawingbook/Solution.java) |
 
 ---
+
 ### [Tower Breakers](https://www.hackerrank.com/challenges/one-month-preparation-kit-tower-breakers-1/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-two)
+
 Two players are playing a game of Tower Breakers! Player 1 always moves first, and both players always play optimally.The rules of the game are as follows:
-- Initially there are *n* towers.
-- Each tower is of height *m*. 
-- The players move in alternating turns. 
-- In each turn, a player can choose a tower of height *x* and reduce its height to *y*, where *1 <= y < x* and *y* evenly divides *x*.
+
+- Initially there are _n_ towers.
+- Each tower is of height _m_.
+- The players move in alternating turns.
+- In each turn, a player can choose a tower of height _x_ and reduce its height to _y_, where _1 <= y < x_ and _y_ evenly divides _x_.
 - If the current player is unable to make a move, they lose the game.
 
-Given the values of *n* and *m*, determine which player will win. If the first player wins, return 1. Otherwise, return 2.
+Given the values of _n_ and _m_, determine which player will win. If the first player wins, return 1. Otherwise, return 2.
 
 ```Java
     public static int towerBreakers(int n, int m) {
@@ -350,7 +423,9 @@ Given the values of *n* and *m*, determine which player will win. If the first p
 [Java Solution](week2/towerbreaker/Solution.java) |
 
 ---
+
 ### [Caesar Cipher](https://www.hackerrank.com/challenges/one-month-preparation-kit-caesar-cipher-1/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-two)
+
 Julius Caesar protected his confidential information by encrypting it using a cipher. Caesar's cipher shifts each letter by a number of letters. If the shift takes you past the end of the alphabet, just rotate back to the front of the alphabet. In the case of a rotation by 3, w, x, y and z would map to z, a, b and c.
 
 ```Java
@@ -371,7 +446,9 @@ Julius Caesar protected his confidential information by encrypting it using a ci
 [Java Solution](week2/caesarcipher/Solution.java) |
 
 ---
+
 ### [Max Min](https://www.hackerrank.com/challenges/one-month-preparation-kit-angry-children/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-two)
+
 You will be given a list of integers,`arr` , and a single integer `k`. You must create an array of length `k` from elements of `arr` such that its unfairness is minimized. Call that array `arr'`. Unfairness of an array is calculated as `max(arr') - min(arr')`
 
 ```Java
@@ -390,19 +467,21 @@ You will be given a list of integers,`arr` , and a single integer `k`. You must 
 [Java Solution](week2/maxmin/Solution.java) |
 
 ---
+
 ### [Dynamic Array](https://www.hackerrank.com/challenges/one-month-preparation-kit-dynamic-array/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-two)
-- Declare a 2-dimensional array,`arr` , of `n` empty arrays. All arrays are zero indexed. 
+
+- Declare a 2-dimensional array,`arr` , of `n` empty arrays. All arrays are zero indexed.
 - Declare an integer, `lastAnswer`, and initialize it to 0
 - There are 2 types of queries, given as an array of strings for you to parse:
-    1. Query: 1 x y
-        1. Let `idx = ((x XOR lastAnswer) % n)`
-        2. Append the integer y to `arr[idx]`
-    2. Query: 2 x y
-    	1. Let `idx = ((x XOR lastAnwswer) % n)`
-    	2. Assign the value `arr[idx][y % size(arr[idx])]` to `lastAnswer`.
-        3. Store the new value of `lastAnswer` to an answers array.
+  1. Query: 1 x y
+     1. Let `idx = ((x XOR lastAnswer) % n)`
+     2. Append the integer y to `arr[idx]`
+  2. Query: 2 x y
+  3. Let `idx = ((x XOR lastAnwswer) % n)`
+  4. Assign the value `arr[idx][y % size(arr[idx])]` to `lastAnswer`.
+  5. Store the new value of `lastAnswer` to an answers array.
 
-Finally, size(arr[idx]) is the number of elements in arr[idx] 
+Finally, size(arr[idx]) is the number of elements in arr[idx]
 
 ```Java
     public static List<Integer> dynamicArray(int n, List<List<Integer>> queries) {
@@ -439,7 +518,9 @@ Finally, size(arr[idx]) is the number of elements in arr[idx]
 [Java Solution](week2/dynamicarray/Solution.java) |
 
 ---
+
 ### [Grid Challenge](https://www.hackerrank.com/challenges/one-month-preparation-kit-grid-challenge/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-two)
+
 Given a square grid of characters in the range ascii[a-z], rearrange elements of each row alphabetically, ascending. Determine if the columns are also in ascending alphabetical order, top to bottom. Return YES if they are or NO if they are not.
 
 ```Java
@@ -462,13 +543,16 @@ Given a square grid of characters in the range ascii[a-z], rearrange elements of
 [Java Solution](week2/gridchallange/Solution.java) |
 
 ---
+
 ### [Prime Dates](https://www.hackerrank.com/challenges/one-month-preparation-kit-prime-date/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-two)
-In this challenge, the task is to debug the existing code to successfully execute all provided test files. 
+
+In this challenge, the task is to debug the existing code to successfully execute all provided test files.
 Given two dates each in the format dd-mm-yyyy, you have to find the number of lucky dates between them (inclusive). To see if a date is lucky,
- - Firstly, sequentially concatenate the date, month and year, into a new integer x erasing the leading zeroes.
- - Now if x is divisible by either 4 or 7, then we call the date a lucky date.
-For example, let's take the date "02-08-2024". After concatinating the day, month and year, we get
-x = 2082024. As x is divisible by 4 so the date "02-08-2024" is called a lucky date.
+
+- Firstly, sequentially concatenate the date, month and year, into a new integer x erasing the leading zeroes.
+- Now if x is divisible by either 4 or 7, then we call the date a lucky date.
+  For example, let's take the date "02-08-2024". After concatinating the day, month and year, we get
+  x = 2082024. As x is divisible by 4 so the date "02-08-2024" is called a lucky date.
 
 Debug the given function findPrimeDates and/or other lines of code, to find the correct lucky dates from the given input.
 
@@ -535,7 +619,9 @@ Note: You can modify at most five lines in the given code and you cannot add or 
 [Java Solution](week2/primedate/Main.java) |
 
 ---
+
 ### [Sherlock and Array](https://www.hackerrank.com/challenges/one-month-preparation-kit-sherlock-and-array/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-two)
+
 Watson gives Sherlock an array of integers. His challenge is to find an element of the array such that the sum of all elements to the left is equal to the sum of all elements to the right.
 
 ```Java
@@ -558,14 +644,18 @@ Watson gives Sherlock an array of integers. His challenge is to find an element 
 [Java Solution](week2/sherlockarray/Solution.java) |
 
 ---
+
 ### [Recursive Digit Sum](https://www.hackerrank.com/challenges/one-month-preparation-kit-recursive-digit-sum/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-two)
+
 We define super digit of an integer x using the following rules:
 
 Given an integer, we need to find the super digit of the integer.
- - If x has only 1 digit, then its super digit is x
- - Otherwise, the super digit of x is equal to the super digit of the sum of the digits of x.
-   
-The number p is created by concatenating the string n k times so the initial 
+
+- If x has only 1 digit, then its super digit is x
+- Otherwise, the super digit of x is equal to the super digit of the sum of the digits of x.
+
+The number p is created by concatenating the string n k times so the initial
+
 ```Java
     public static int superDigit(String n, int k) {
         if (n.length() == 1)
@@ -583,7 +673,9 @@ The number p is created by concatenating the string n k times so the initial
 [Java Solution](week2/recursivedigitsum/Solution.java) |
 
 ---
+
 ### [Counter game](https://www.hackerrank.com/challenges/one-month-preparation-kit-counter-game/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-two)
+
 Louise and Richard have developed a numbers game. They pick a number and check to see if it is a power of 2. If it is, they divide it by 2. If not, they reduce it by the next lower number which is a power of 2. Whoever reduces the number to 1 wins the game. Louise always starts.
 
 Given an initial value, determine who wins the game.
@@ -610,9 +702,12 @@ Given an initial value, determine who wins the game.
 [Java Solution](week2/countergame/Solution.java) |
 
 ---
+
 ### [Sum vs XOR](https://www.hackerrank.com/challenges/one-month-preparation-kit-sum-vs-xor/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-two)
+
 Given an integer n, find each x such that:
-- 0 <= x <= n 
+
+- 0 <= x <= n
 - n + x = n XOR x
 
 Return the number of x's satisfying the criteria.
@@ -650,9 +745,11 @@ Return the number of x's satisfying the criteria.
 [Java Solution](week2/sumxor/Solution.java) |
 
 ---
+
 ### Mock Test
 
 #### [Palindrome Index](https://www.hackerrank.com/challenges/palindrome-index/problem?isFullScreen=true)
+
 Given a string of lowercase letters in the range ascii[a-z], determine the index of a character that can be
 removed to make the string a palindrome. There may be more than one solution, but any will do. If the word
 is already a palindrome or there is no solution, return -1. Otherwise, return the index of a character to
@@ -670,7 +767,7 @@ remove.
         }
         return -1;
     }
-    
+
     private static boolean isPalindrome(String s, int start, int end) {
         while(start++ < end--) {
             if (s.charAt(start) != s.charAt(end))
@@ -683,11 +780,14 @@ remove.
 [Java Solution](week2/mock/palindromeIndex/Solution.java)
 
 ---
+
 #### [Between Two Sets]
+
 There will be two arrays of integers. Determine all integers that satisfy the following two conditions:
+
 1. The elements of the first array are all factors of the integer being considered
 2. The integer being considered is a factor of all elements of the second array
-These numbers are referred to as being between the two arrays. Determine how many such numbers exist.
+   These numbers are referred to as being between the two arrays. Determine how many such numbers exist.
 
 ```Java
     public static int getTotalX(List<Integer> a, List<Integer> b) {
@@ -724,7 +824,9 @@ These numbers are referred to as being between the two arrays. Determine how man
 [Java Solution](week2/mock/betweentwosets/Solution.java)
 
 ---
+
 #### [Anagram]
+
 Two words are anagrams of one another if their letters can be rearranged to form the other word.
 Given a string, split it into two contiguous substrings of equal length. Determine the minimum number of
 characters to change to make the two substrings into anagrams of one another
@@ -744,12 +846,15 @@ characters to change to make the two substrings into anagrams of one another
         return s2.length();
     }
 ```
+
 [Java Solution](week2/mock/anagram/Solution.java)
 
 ---
+
 ## Week 3
 
 ### [The Bomberman Game](https://www.hackerrank.com/challenges/one-month-preparation-kit-bomber-man/problem?h_l=interview&isFullScreen=true&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-three)
+
 Bomberman lives in a rectangular grid. Each cell in the grid either contains a bomb or nothing at all. Each bomb can be planted in any cell of the grid but once planted, it will detonate after exactly 3 seconds. Once a bomb detonates, it's destroyed — along with anything in its four neighboring cells. This means that if a bomb detonates in cell i,j any valid cells (i +/- 1,j) and (i,j +/- 1) are cleared. If there is a bomb in a neighboring cell, the neighboring bomb is destroyed without detonating, so there's no chain reaction.
 
 Bomberman is immune to bombs, so he can move freely throughout the grid. Here's what he does:
@@ -781,7 +886,7 @@ seconds.
 
         /*
          * 4 possible states:
-         * 
+         *
          * 1. Original grid (n = 1)
          * 2. Full of bombs (n = 2, 4, 6...)
          * 3. Detonate 1 time (n = 3, 7, 11...)
@@ -849,10 +954,13 @@ seconds.
 [Java Solution](week3/bomberman/Solution.java) |
 
 ---
+
 ### [New Year Chaos](https://www.hackerrank.com/challenges/one-month-preparation-kit-new-year-chaos/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-three)
+
 It is New Year's Day and people are in line for the Wonderland rollercoaster ride. Each person wears a sticker indicating their initial position in the queue from 1 to n. Any person can bribe the person directly in front of them to swap positions, but they still wear their original sticker. One person can bribe at most two others.
 
 Determine the minimum number of bribes that took place to get to a given queue order. Print the number of bribes, or, if anyone has bribed more than two people, print Too chaotic.
+
 ```Java
     public static void minimumBribes(List<Integer> q) {
         int swaps = 0;
@@ -882,8 +990,11 @@ Determine the minimum number of bribes that took place to get to a given queue o
 [Java Solution](week3/newyearchaos/Solution.java) |
 
 ---
+
 ### [Sherlock and the Valid String](https://www.hackerrank.com/challenges/one-month-preparation-kit-sherlock-and-valid-string/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-three)
+
 Sherlock considers a string to be valid if all characters of the string appear the same number of times. It is also valid if he can remove just 1 character at 1 index in the string, and the remaining characters will occur the same number of times. Given a string s, determine if it is valid. If so, return YES, otherwise return NO.
+
 ```Java
     public static String isValid(String s) {
         Map<Character, Integer> charMap = new HashMap<>();
@@ -911,11 +1022,14 @@ Sherlock considers a string to be valid if all characters of the string appear t
 [Java Solution](week3/sherlockvalidstring/Solution.java) |
 
 ---
+
 ### [Climbing the Leaderboard](https://www.hackerrank.com/challenges/one-month-preparation-kit-climbing-the-leaderboard/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-three)
+
 An arcade game player wants to climb to the top of the leaderboard and track their ranking. The game uses Dense Ranking, so its leaderboard works like this:
 
-* The player with the highest score is ranked number 1 on the leaderboard.
-* Players who have equal scores receive the same ranking number, and the next player(s) receive the immediately following ranking number.
+- The player with the highest score is ranked number 1 on the leaderboard.
+- Players who have equal scores receive the same ranking number, and the next player(s) receive the immediately following ranking number.
+
 ```Java
     public static List<Integer> climbingLeaderboard(List<Integer> ranked, List<Integer> player) {
 
@@ -958,8 +1072,11 @@ An arcade game player wants to climb to the top of the leaderboard and track the
 [Java Solution](week3/climbingleaderboard/Solution.java) |
 
 ---
+
 ### [Reverse a linked list](https://www.hackerrank.com/challenges/one-month-preparation-kit-reverse-a-linked-list/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-three)
-Given the pointer to the head node of a linked list, change the next pointers of the nodes so that their order is reversed. The head pointer given may be null meaning that the initial list is empty. 
+
+Given the pointer to the head node of a linked list, change the next pointers of the nodes so that their order is reversed. The head pointer given may be null meaning that the initial list is empty.
+
 ```Java
     public static SinglyLinkedListNode reverse(SinglyLinkedListNode llist) {
         SinglyLinkedListNode prevNode = null;
@@ -978,8 +1095,11 @@ Given the pointer to the head node of a linked list, change the next pointers of
 [Java Solution](week3/reverselinkedlist/Solution.java) |
 
 ---
+
 ### [Reverse a doubly linked list](https://www.hackerrank.com/challenges/one-month-preparation-kit-reverse-a-doubly-linked-list/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-three)
-Given the pointer to the head node of a doubly linked list, reverse the order of the nodes in place. That is, change the next and prev pointers of the nodes so that the direction of the list is reversed. Return a reference to the head node of the reversed list. 
+
+Given the pointer to the head node of a doubly linked list, reverse the order of the nodes in place. That is, change the next and prev pointers of the nodes so that the direction of the list is reversed. Return a reference to the head node of the reversed list.
+
 ```Java
     public static DoublyLinkedListNode reverse(DoublyLinkedListNode llist) {
         DoublyLinkedListNode prevNode = null;
@@ -1003,10 +1123,13 @@ Given the pointer to the head node of a doubly linked list, reverse the order of
 [Java Solution](week3/reversedoublylinkedlist/Solution.java) |
 
 ---
+
 ### [Insert a node at a specific position](https://www.hackerrank.com/challenges/one-month-preparation-kit-insert-a-node-at-a-specific-position-in-a-linked-list/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-three)
+
 Given the pointer to the head node of a linked list and an integer to insert at a certain position, create a new node with the given integer as its data attribute, insert this node at the desired position and return the head node.
 
-A position of 0 indicates head, a position of 1 indicates one node away from the head and so on. The head pointer given may be null meaning that the initial list is empty. 
+A position of 0 indicates head, a position of 1 indicates one node away from the head and so on. The head pointer given may be null meaning that the initial list is empty.
+
 ```Java
     public static SinglyLinkedListNode insertNodeAtPosition(SinglyLinkedListNode llist, int data, int position) {
         int index = 0;
@@ -1032,8 +1155,11 @@ A position of 0 indicates head, a position of 1 indicates one node away from the
 [Java Solution](week3/insertlinkedlist/Solution.java) |
 
 ---
+
 ### [Merge two sorted linked lists](https://www.hackerrank.com/challenges/one-month-preparation-kit-merge-two-sorted-linked-lists/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-three)
+
 Given pointers to the heads of two sorted linked lists, merge them into a single, sorted linked list. Either head pointer may be null meaning that the corresponding list is empty.
+
 ```Java
     static SinglyLinkedListNode mergeLists(SinglyLinkedListNode head1, SinglyLinkedListNode head2) {
         SinglyLinkedListNode pt1 = head1;
@@ -1064,10 +1190,13 @@ Given pointers to the heads of two sorted linked lists, merge them into a single
 [Java Solution](week3/mergedlinkedlist/Solution.java) |
 
 ---
+
 ### [Ice Cream Parlor](https://www.hackerrank.com/challenges/one-month-preparation-kit-icecream-parlor/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-three)
+
 Two friends like to pool their money and go to the ice cream parlor. They always choose two distinct flavors and they spend all of their money.
 
-Given a list of prices for the flavors of ice cream, select the two that will cost all of the money they have. 
+Given a list of prices for the flavors of ice cream, select the two that will cost all of the money they have.
+
 ```Java
     public static List<Integer> icecreamParlor(int m, List<Integer> arr) {
         for (int f1 : arr) {
@@ -1083,19 +1212,22 @@ Given a list of prices for the flavors of ice cream, select the two that will co
 [Java Solution](week3/icecreamparlor/Solution.java) |
 
 ---
+
 ### [Queue using Two Stacks](https://www.hackerrank.com/challenges/one-month-preparation-kit-queue-using-two-stacks/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-three)
+
 A queue is an abstract data type that maintains the order in which elements were added to it, allowing the oldest elements to be removed from the front and new elements to be added to the rear. This is called a First-In-First-Out (FIFO) data structure because the first element added to the queue (i.e., the one that has been waiting the longest) is always the first one to be removed.
 
 A basic queue has the following operations:
 
-* Enqueue: add a new element to the end of the queue.
-* Dequeue: remove the element from the front of the queue and return it.
+- Enqueue: add a new element to the end of the queue.
+- Dequeue: remove the element from the front of the queue and return it.
 
 In this challenge, you must first implement a queue using two stacks. Then process q queries, where each query is one of the following types:
 
 1. 1: x: Enqueue element x into the end of the queue.
 2. 2: Dequeue the element at the front of the queue.
 3. 3: Print the element at the front of the queue.
+
 ```Java
     public static void main(String[] args) {
         Stack<String> s1 = new Stack<>();
@@ -1139,7 +1271,9 @@ In this challenge, you must first implement a queue using two stacks. Then proce
 [Java Solution](week3/queuetwostacks/Solution.java) |
 
 ---
+
 ### [Balanced Brackets](https://www.hackerrank.com/challenges/one-month-preparation-kit-balanced-brackets/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-three)
+
 A bracket is considered to be any one of the following characters: (, ), {, }, \[, or \].
 
 Two brackets are considered to be a matched pair if the an opening bracket (i.e., (, \[, or {) occurs to the left of a closing bracket (i.e., ), \], or }) of the exact same type. There are three types of matched pairs of brackets: [], {}, and ().
@@ -1148,10 +1282,11 @@ A matching pair of brackets is not balanced if the set of brackets it encloses a
 
 By this logic, we say a sequence of brackets is balanced if the following conditions are met:
 
-* It contains no unmatched brackets.
-* The subset of brackets enclosed within the confines of a matched pair of brackets is also a matched pair of brackets.
+- It contains no unmatched brackets.
+- The subset of brackets enclosed within the confines of a matched pair of brackets is also a matched pair of brackets.
 
-Given n strings of brackets, determine whether each sequence of brackets is balanced. If a string is balanced, return YES. Otherwise, return NO. 
+Given n strings of brackets, determine whether each sequence of brackets is balanced. If a string is balanced, return YES. Otherwise, return NO.
+
 ```Java
     public static String isBalanced(String s) {
         Stack<Character> stack = new Stack<>();
@@ -1174,8 +1309,11 @@ Given n strings of brackets, determine whether each sequence of brackets is bala
 [Java Solution](week3/balancedbrackets/Solution.java) |
 
 ---
+
 ### [Waiter](https://www.hackerrank.com/challenges/one-month-preparation-kit-waiter/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-three)
-You are a waiter at a party. There is a pile of numbered plates. Create an empty `answers` array. At each iteration, `i` , remove each plate from the top of the stack in order. Determine if the number on the plate is evenly divisible by the `ith` prime number. If it is, stack it in pile `B`. Otherwise, stack it in stack `A`. Store the values in `B` from top to bottom in `answers`. In the next iteration, do the same with the values in stack `A`. Once the required number of iterations is complete, store the remaining values in `A` in `answers`, again from top to bottom. Return the `answers` array. 
+
+You are a waiter at a party. There is a pile of numbered plates. Create an empty `answers` array. At each iteration, `i` , remove each plate from the top of the stack in order. Determine if the number on the plate is evenly divisible by the `ith` prime number. If it is, stack it in pile `B`. Otherwise, stack it in stack `A`. Store the values in `B` from top to bottom in `answers`. In the next iteration, do the same with the values in stack `A`. Once the required number of iterations is complete, store the remaining values in `A` in `answers`, again from top to bottom. Return the `answers` array.
+
 ```Java
     private static List<Integer> getPrimes(int q) {
         List<Integer> primes = new ArrayList<>();
@@ -1223,13 +1361,16 @@ You are a waiter at a party. There is a pile of numbered plates. Create an empty
 [Java Solution](week3/waiter/Solution.java) |
 
 ---
+
 ### [Simple Text Eidtor](https://www.hackerrank.com/challenges/one-month-preparation-kit-simple-text-editor/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-three)
+
 Implement a simple text editor. The editor initially contains an empty string, S. Perform Q operations of the following 4 types:
 
 1. append(W) - Append string to the end of S.
 2. delete(k) - Delete the last characters of S.
 3. print(k) - Print the kth character of S.
-4. undo() - Undo the last (not previously undone) operation of type 1 or 2, reverting S to the state it was in prior to that operation. 
+4. undo() - Undo the last (not previously undone) operation of type 1 or 2, reverting S to the state it was in prior to that operation.
+
 ```Java
     public static void main(String[] args) {
         Stack<String> stack = new Stack<>();
@@ -1267,12 +1408,15 @@ Implement a simple text editor. The editor initially contains an empty string, S
 [Java Solution](week3/simpletexteditor/Solution.java) |
 
 ---
+
 ### Mock Test
 
 #### [Truck Tour](https://www.hackerrank.com/challenges/truck-tour/problem)
+
 Suppose there is a circle. There are N petrol pumps on that circle. Petrol pumps are numbered 0 to (N - 1) (both inclusive). You have two pieces of information corresponding to each of the petrol pump: (1) the amount of petrol that particular petrol pump will give, and (2) the distance from that petrol pump to the next petrol pump.
 
 Initially, you have a tank of infinite capacity carrying no petrol. You can start the tour at any of the petrol pumps. Calculate the first point from where the truck will be able to complete the circle. Consider that the truck will stop at each of the petrol pumps. The truck will move one kilometer for each litre of the petrol
+
 ```Java
     public static int truckTour(List<List<Integer>> petrolpumps) {
         int start;
@@ -1297,7 +1441,9 @@ Initially, you have a tank of infinite capacity carrying no petrol. You can star
 ---
 
 #### [Pairs](https://www.hackerrank.com/challenges/pairs/problem)
+
 Given an array of integers and a target value, determine the number of pairs of array elements that have a difference equal to the target value
+
 ```Java
     public static int pairs(int k, List<Integer> arr) {
         // let a, b in arr ==> a - b = k ==> a = b + k
@@ -1317,8 +1463,10 @@ Given an array of integers and a target value, determine the number of pairs of 
 ---
 
 #### [Big Sorting](https://www.hackerrank.com/challenges/big-sorting/problem)
+
 Consider an array of numeric strings where each string is a positive number with anywhere from 1 to 10^6 digits. Sort the array's elements in non-decreasing, or ascending order of their integer values and return the
 sorted array.
+
 ```Java
     public static List<String> bigSorting(List<String> unsorted) {
         // if they have the different length then we just compare their lengths
@@ -1332,12 +1480,15 @@ sorted array.
 [Java Solution](week3/mock/bigsorting/Solution.java)
 
 ---
+
 ## Week 4
 
 ### [Equal Stacks](https://www.hackerrank.com/challenges/one-month-preparation-kit-equal-stacks/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four)
+
 You have three stacks of cylinders where each cylinder has the same diameter, but they may vary in height. You can change the height of a stack by removing and discarding its topmost cylinder any number of times.
 
-Find the maximum possible height of the stacks such that all of the stacks are exactly the same height. This means you must remove zero or more cylinders from the top of zero or more of the three stacks until they are all the same height, then return the height. 
+Find the maximum possible height of the stacks such that all of the stacks are exactly the same height. This means you must remove zero or more cylinders from the top of zero or more of the three stacks until they are all the same height, then return the height.
+
 ```Java
     public static int equalStacks(List<Integer> h1, List<Integer> h2, List<Integer> h3) {
         int height1 = 0, height2 = 0, height3 = 0;
@@ -1363,11 +1514,12 @@ Find the maximum possible height of the stacks such that all of the stacks are e
     }
 ```
 
-[Java Solution](week4/equalstack/Solution.java) | 
+[Java Solution](week4/equalstack/Solution.java) |
 
 ---
 
 ### [The Maximum Subarray](https://www.hackerrank.com/challenges/one-month-preparation-kit-maxsubarray/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four)
+
 We define subsequence as any subset of an array. We define a subarray as a contiguous subsequence in an array.
 
 Given an array, find the maximum possible sum among:
@@ -1377,7 +1529,8 @@ Given an array, find the maximum possible sum among:
 
 Print the two values as space-separated integers on one line.
 
-Note that empty subarrays/subsequences should not be considered. 
+Note that empty subarrays/subsequences should not be considered.
+
 ```Java
     public static List<Integer> maxSubarray(List<Integer> arr) {
         int maxSubarray = Integer.MIN_VALUE;
@@ -1407,11 +1560,12 @@ Note that empty subarrays/subsequences should not be considered.
     }
 ```
 
-[Java Solution](week4/maxsubarray/Solution.java) | 
+[Java Solution](week4/maxsubarray/Solution.java) |
 
 ---
 
 ### [Lego Blocks](https://www.hackerrank.com/challenges/one-month-preparation-kit-lego-blocks/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four)
+
 You have an infinite number of 4 types of lego blocks of sizes given as (depth x height x width):
 
 Using these blocks, you want to make a wall of height n and width m. Features of the wall are:
@@ -1421,6 +1575,7 @@ Using these blocks, you want to make a wall of height n and width m. Features of
 - The bricks must be laid horizontally.
 
 How many ways can the wall be built?
+
 ```Java
     /**
      * Raise a num to an exponent and mod the result
@@ -1440,18 +1595,18 @@ How many ways can the wall be built?
      * Strategy using Dynamic Programming:
      * 1. Create an array where each index represents the width
      * and store the number of permuations for a single row.
-     * 
+     *
      * 2. Create an array where each index represents the width
      * and store the number of valid and invalid permutations for
      * the total number of rows (height)
-     * 
+     *
      * 3. Create an array where each index represents the width
      * and store the number of invalid permuations of each
      * total number of rows.
-     * 
+     *
      * 4. The final result will be the substracion of (2) - (3):
      * result = (valid + invalid) - (invalid)
-     * 
+     *
      */
     public static int legoBlocks(int h, int w) {
         long divisor = 1000000007; // every calculation must be mod by this number
@@ -1527,20 +1682,22 @@ How many ways can the wall be built?
 
 ```
 
-[Java Solution](week4/legoblocks/Solution.java) | 
+[Java Solution](week4/legoblocks/Solution.java) |
 
 ---
 
 ### [QHEAP1](https://www.hackerrank.com/challenges/one-month-preparation-kit-qheap1/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four)
+
 This question is designed to help you get a better understanding of basic heap operations.
 
 There are 3 types of query:
 
-* "1 v" - Add an element v to the heap.
-* "2 v" - Delete the element v from the heap.
-* "3" - Print the minimum of all the elements in the heap.
+- "1 v" - Add an element v to the heap.
+- "2 v" - Delete the element v from the heap.
+- "3" - Print the minimum of all the elements in the heap.
 
 NOTE: It is guaranteed that the element to be deleted will be there in the heap. Also, at any instant, only distinct elements will be in the heap.
+
 ```Java
    static class MyHeap {
         private long[] items;
@@ -1691,11 +1848,12 @@ NOTE: It is guaranteed that the element to be deleted will be there in the heap.
     }
 ```
 
-[Java Solution](week4/qheap1/Solution.java) | 
+[Java Solution](week4/qheap1/Solution.java) |
 
 ---
 
 ### [Jesse and Cookies](https://www.hackerrank.com/challenges/one-month-preparation-kit-jesse-and-cookies/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four)
+
 Jesse loves cookies and wants the sweetness of some cookies to be greater than value k. To do this, two cookies with the least sweetness are repeatedly mixed. This creates a special combined cookie with:
 
 sweetness = (1 x Least sweet cookie + 2 x 2nd least sweet cookie).
@@ -1703,6 +1861,7 @@ sweetness = (1 x Least sweet cookie + 2 x 2nd least sweet cookie).
 This occurs until all the cookies have a sweetness >= k.
 
 Given the sweetness of a number of cookies, determine the minimum number of operations required. If it is not possible, return -1.
+
 ```Java
     public static int cookies(int k, List<Integer> A) {
         int iterations = 0;
@@ -1717,14 +1876,16 @@ Given the sweetness of a number of cookies, determine the minimum number of oper
     }
 ```
 
-[Java Solution](week4/jessecookies/Solution.java) | 
+[Java Solution](week4/jessecookies/Solution.java) |
 
 ---
 
 ### [Hackerland Radio Transmitters](https://www.hackerrank.com/challenges/one-month-preparation-kit-hackerland-radio-transmitters/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four)
+
 Hackerland is a one-dimensional city with houses aligned at integral locations along a road. The Mayor wants to install radio transmitters on the roofs of the city's houses. Each transmitter has a fixed range meaning it can transmit a signal to all houses within that number of units distance away.
 
 Given a map of Hackerland and the transmission range, determine the minimum number of transmitters so that every house is within range of at least one transmitter. Each transmitter must be installed on top of an existing house.
+
 ```Java
     public static int hackerlandRadioTransmitters(List<Integer> x, int k) {
         int transmitter = 0;
@@ -1746,18 +1907,20 @@ Given a map of Hackerland and the transmission range, determine the minimum numb
     }
 ```
 
-[Java Solution](week4/hackerlandradio/Solution.java) | 
+[Java Solution](week4/hackerlandradio/Solution.java) |
 
 ---
 
 ### [Queries with fixed length](https://www.hackerrank.com/challenges/one-month-preparation-kit-queries-with-fixed-length/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four)
-Consider an n-integer sequence, *A = {a0, a1,...an-1}*. We perform a query on A by using an integer, a, to calculate the result of the following expression:
+
+Consider an n-integer sequence, _A = {a0, a1,...an-1}_. We perform a query on A by using an integer, a, to calculate the result of the following expression:
 
 ![Alt text](resources/minmax.svg)
 
-In other words, if we let *mi = max(ai,ai+1,ai+2,...ai+d-1)*, then you need to calculate *min(m0,m1,...,mn-d)*.
+In other words, if we let _mi = max(ai,ai+1,ai+2,...ai+d-1)_, then you need to calculate _min(m0,m1,...,mn-d)_.
 
 Given arr and q queries, return a list of answers to each query.
+
 ```Java
     public static List<Integer> solve(List<Integer> arr, List<Integer> queries) {
         List<Integer> result = new ArrayList<>();
@@ -1784,12 +1947,14 @@ Given arr and q queries, return a list of answers to each query.
     }
 ```
 
-[Java Solution](week4/queriesfixedlength/Solution.java) | 
+[Java Solution](week4/queriesfixedlength/Solution.java) |
 
 ---
 
 ### [Array Manipulation](https://www.hackerrank.com/challenges/one-month-preparation-kit-crush/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four)
-Starting with a 1-indexed array of zeros and a list of operations, for each operation add a value to each the array element between two given indices, inclusive. Once all operations have been performed, return the maximum value in the array. 
+
+Starting with a 1-indexed array of zeros and a list of operations, for each operation add a value to each the array element between two given indices, inclusive. Once all operations have been performed, return the maximum value in the array.
+
 ```Java
     /*
     queries = [[1,5,3], [4,8,7],[6,10,1]]
@@ -1829,17 +1994,19 @@ Starting with a 1-indexed array of zeros and a list of operations, for each oper
     }
 ```
 
-[Java Solution](week4/arraymanipulation/Solution.java) | 
+[Java Solution](week4/arraymanipulation/Solution.java) |
 
 ---
 
 ### [Highest Value Palindrome](https://www.hackerrank.com/challenges/one-month-preparation-kit-richie-rich/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four)
+
 Palindromes are strings that read the same from the left or right, for example madam or 0110.
 
 You will be given a string representation of a number and a maximum number of changes you can make. Alter the string, one digit at a time, to create the string representation of the largest number possible given the limit to the number of changes. The length of the string may not be altered, so you must consider
 0's left of all higher digits in your tests. For example 0110 is valid, 0011 is not.
 
-Given a string representing the starting number, and a maximum number of changes allowed, create the largest palindromic string of digits possible or the string '-1' if it is not possible to create a palindrome under the contstraints. 
+Given a string representing the starting number, and a maximum number of changes allowed, create the largest palindromic string of digits possible or the string '-1' if it is not possible to create a palindrome under the contstraints.
+
 ```Java
     public static String highestValuePalindrome(String s, int n, int k) {
         StringBuilder sb = new StringBuilder(s);
@@ -1891,16 +2058,18 @@ Given a string representing the starting number, and a maximum number of changes
 
 ```
 
-[Java Solution](week4/highestvaluepalindrome/Solution.java) | 
+[Java Solution](week4/highestvaluepalindrome/Solution.java) |
 
 ---
 
 ### [Lily's Homework](https://www.hackerrank.com/challenges/one-month-preparation-kit-lilys-homework/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four)
+
 Whenever George asks Lily to hang out, she's busy doing homework. George wants to help her finish it faster, but he's in over his head! Can you help George understand Lily's homework so she can hang out with him?
 
-Consider an array of n distinct integers, *arr = [a[0], a[1],...,a[n-1]]*. George can swap any two elements of the array any number of times. An array is beautiful if the sum of *|arr[i] - arr[i-1]|* among *0 < i < n* is minimal.
+Consider an array of n distinct integers, _arr = [a[0], a[1],...,a[n-1]]_. George can swap any two elements of the array any number of times. An array is beautiful if the sum of _|arr[i] - arr[i-1]|_ among _0 < i < n_ is minimal.
 
-Given the array *arr*, determine and return the minimum number of swaps that should be performed in order to make the array beautiful.
+Given the array _arr_, determine and return the minimum number of swaps that should be performed in order to make the array beautiful.
+
 ```Java
     public static int lilysHomework(List<Integer> arr) {
         int swaps_asc = 0;
@@ -1951,12 +2120,14 @@ Given the array *arr*, determine and return the minimum number of swaps that sho
     }
 ```
 
-[Java Solution](week4/lilyshomework/Solution.java) | 
+[Java Solution](week4/lilyshomework/Solution.java) |
 
 ---
 
 ### [Tree: Preorder Traversal](https://www.hackerrank.com/challenges/one-month-preparation-kit-tree-preorder-traversal/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four)
-Complete the *preOrder* function in the editor below, which has parameter: a pointer to the root of a binary tree. It must print the values in the tree's preorder traversal as a single line of space-separated values. 
+
+Complete the _preOrder_ function in the editor below, which has parameter: a pointer to the root of a binary tree. It must print the values in the tree's preorder traversal as a single line of space-separated values.
+
 ```Java
     public static void preOrder(Node root) {
         if (root == null) {
@@ -1971,16 +2142,17 @@ Complete the *preOrder* function in the editor below, which has parameter: a poi
     }
 ```
 
-[Java Solution](week4/preordertraversal/Solution.java) | 
+[Java Solution](week4/preordertraversal/Solution.java) |
 
 ---
 
 ### [Tree: Huffman Decoding](https://www.hackerrank.com/challenges/one-month-preparation-kit-tree-huffman-decoding/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four)
+
 Huffman coding assigns variable length codewords to fixed length input characters based on their frequencies. More frequent characters are assigned shorter codewords and less frequent characters are assigned longer codewords. All edges along the path to a character contain a code digit. If they are on the left side of the tree, they will be a 0 (zero). If on the right, they'll be a 1 (one). Only the leaves will contain a letter and its frequency count. All other nodes will contain a null instead of a character, and the count of the frequency of all of it and its descendant characters.
 
-For instance, consider the string ABRACADABRA. There are a total of 11 characters in the string. This number should match the count in the ultimately determined root of the tree. Our frequencies are *A=5, B=2,R=2, C=1* and *D=1*. The two smallest frequencies are for *C* and *D*, both equal to 1, so we'll create a tree with them. The root node will contain the sum of the counts of its descendants, in this case 1 + 1 = 2. The left node will be the first character encountered, *C*, and the right will contain *D*. Next we have 2 items with a character count of 2: the tree we just created, the character *B* and the character *R*. The tree came first, so it will go on the left of our new root node. *B* will go on the right. Repeat until the tree is complete, then fill in the 1's and 0's for the edges. The finished graph looks like: 
+For instance, consider the string ABRACADABRA. There are a total of 11 characters in the string. This number should match the count in the ultimately determined root of the tree. Our frequencies are _A=5, B=2,R=2, C=1_ and _D=1_. The two smallest frequencies are for _C_ and _D_, both equal to 1, so we'll create a tree with them. The root node will contain the sum of the counts of its descendants, in this case 1 + 1 = 2. The left node will be the first character encountered, _C_, and the right will contain _D_. Next we have 2 items with a character count of 2: the tree we just created, the character _B_ and the character _R_. The tree came first, so it will go on the left of our new root node. _B_ will go on the right. Repeat until the tree is complete, then fill in the 1's and 0's for the edges. The finished graph looks like:
 
-Input characters are only present in the leaves. Internal nodes have a character value of ϕ (NULL). We can determine that our values for characters are: 
+Input characters are only present in the leaves. Internal nodes have a character value of ϕ (NULL). We can determine that our values for characters are:
 
 To decode the encoded string, follow the zeros and ones to a leaf and return the character there.
 
@@ -2004,12 +2176,14 @@ You are given pointer to the root of the Huffman tree and a binary coded string 
     }
 ```
 
-[Java Solution](week4/huffmandecoding/Solution.java) | 
+[Java Solution](week4/huffmandecoding/Solution.java) |
 
 ---
 
 ### [Binary Search Tree: Lowest Common Ancestor](https://www.hackerrank.com/challenges/one-month-preparation-kit-binary-search-tree-lowest-common-ancestor/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four)
-You are given pointer to the root of the binary search tree and two values *v1* and *v2*. You need to return the lowest common ancestor (LCA) of *v1* and *v2* in the binary search tree. 
+
+You are given pointer to the root of the binary search tree and two values _v1_ and _v2_. You need to return the lowest common ancestor (LCA) of _v1_ and _v2_ in the binary search tree.
+
 ```Java
     public static Node lca(Node root, int v1, int v2) {
         if (v1 > root.data && v2 > root.data)
@@ -2022,14 +2196,16 @@ You are given pointer to the root of the binary search tree and two values *v1* 
     }
 ```
 
-[Java Solution](week4/bstlowestcommonancestor/Solution.java) | 
+[Java Solution](week4/bstlowestcommonancestor/Solution.java) |
 
 ---
 
 ### [No Prefix Set](https://www.hackerrank.com/challenges/one-month-preparation-kit-no-prefix-set/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four)
-There is a given list of strings where each string contains only lowercase letters from *a-j*, inclusive. The set of strings is said to be a GOOD SET if no string is a prefix of another string. In this case, print GOOD SET. Otherwise, print BAD SET on the first line followed by the string being checked.
+
+There is a given list of strings where each string contains only lowercase letters from _a-j_, inclusive. The set of strings is said to be a GOOD SET if no string is a prefix of another string. In this case, print GOOD SET. Otherwise, print BAD SET on the first line followed by the string being checked.
 
 Note If two strings are identical, they are prefixes of each other.
+
 ```Java
     public static void noPrefix(List<String> words) {
         Trie trie = new Trie();
@@ -2087,12 +2263,14 @@ Note If two strings are identical, they are prefixes of each other.
 
 ```
 
-[Java Solution](week4/noprefixset/Solution.java) | 
+[Java Solution](week4/noprefixset/Solution.java) |
 
 ---
 
 ### [Castle on the Grid](https://www.hackerrank.com/challenges/one-month-preparation-kit-castle-on-the-grid/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four)
-You are given a square grid with some cells open (.) and some blocked (X). Your playing piece can move along any row or column until it reaches the edge of the grid or a blocked cell. Given a grid, a start and a goal, determine the minmum number of moves to get to the goal. 
+
+You are given a square grid with some cells open (.) and some blocked (X). Your playing piece can move along any row or column until it reaches the edge of the grid or a blocked cell. Given a grid, a start and a goal, determine the minmum number of moves to get to the goal.
+
 ```Java
     public static int minimumMoves(List<String> grid, int startX, int startY, int goalX, int goalY) {
 
@@ -2165,15 +2343,16 @@ You are given a square grid with some cells open (.) and some blocked (X). Your 
     }
 ```
 
-[Java Solution](week4/castlegrid/Solution.java) | 
+[Java Solution](week4/castlegrid/Solution.java) |
 
 ---
 
-### [Roads and Libraries](https://www.hackerrank.com/interview/preparation-kits/one-month-preparation-kit/one-month-week-four/challenges](https://www.hackerrank.com/challenges/one-month-preparation-kit-torque-and-development/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four))
-Determine the minimum cost to provide library access to all citizens of HackerLand. There are *n* cities numbered from *1* to *n*. Currently there are no libraries and the cities are not connected. Bidirectional roads may be built between any city pair listed in *cities*. A citizen has access to a library if:
+### [Roads and Libraries](<https://www.hackerrank.com/interview/preparation-kits/one-month-preparation-kit/one-month-week-four/challenges](https://www.hackerrank.com/challenges/one-month-preparation-kit-torque-and-development/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four)>)
 
-* Their city contains a library.
-* They can travel by road from their city to a city containing a library.
+Determine the minimum cost to provide library access to all citizens of HackerLand. There are _n_ cities numbered from _1_ to _n_. Currently there are no libraries and the cities are not connected. Bidirectional roads may be built between any city pair listed in _cities_. A citizen has access to a library if:
+
+- Their city contains a library.
+- They can travel by road from their city to a city containing a library.
 
 Example
 
@@ -2181,7 +2360,7 @@ The following figure is a sample map of HackerLand where the dotted lines denote
 
 ![Alt text](resources/graph1.png)
 
-The cost of building any road is *cc_road = 2* , and the cost to build a library in any city is *cc_lib = 3*. Build 5 roads at a cost of *5 x 2 = 10* and 2 libraries for a cost of *6*. One of the available roads in the cycle *1 --> 2 --> 3 --> 1* is not necessary. 
+The cost of building any road is _cc_road = 2_ , and the cost to build a library in any city is _cc_lib = 3_. Build 5 roads at a cost of _5 x 2 = 10_ and 2 libraries for a cost of _6_. One of the available roads in the cycle _1 --> 2 --> 3 --> 1_ is not necessary.
 
 ```Java
     public static long roadsAndLibraries(int n, int c_lib, int c_road, List<List<Integer>> cities) {
@@ -2264,15 +2443,17 @@ The cost of building any road is *cc_road = 2* , and the cost to build a library
 
 ```
 
-[Java Solution](week4/roadslibraries/Solution.java) | 
+[Java Solution](week4/roadslibraries/Solution.java) |
 
 ---
+
 ### Mock Test
 
 #### [Breadth First Search: Shortest Reach](https://www.hackerrank.com/challenges/bfsshortreach/problem)
+
 Consider an undirected graph where each edge weighs 6 units. Each of the nodes is labeled consecutively from 1 to n.
 
-You will be given a number of queries. For each query, you will be given a list of edges describing an undirected graph. After you create a representation of the graph, you must determine and report the shortest distance to each of the other nodes from a given starting position using the breadth-first search algorithm (BFS). Return an array of distances from the start node in node number order. If a node is unreachable, return -1 for that node. 
+You will be given a number of queries. For each query, you will be given a list of edges describing an undirected graph. After you create a representation of the graph, you must determine and report the shortest distance to each of the other nodes from a given starting position using the breadth-first search algorithm (BFS). Return an array of distances from the start node in node number order. If a node is unreachable, return -1 for that node.
 
 ```Java
     public static List<Integer> bfs(int n, int m, List<List<Integer>> edges, int s) {
@@ -2308,14 +2489,15 @@ You will be given a number of queries. For each query, you will be given a list 
     }
 ```
 
-[Java Solution](week4/mock/bfs/Solution.java) 
+[Java Solution](week4/mock/bfs/Solution.java)
 
 ---
 
 #### [Components in a graph](https://www.hackerrank.com/challenges/components-in-graph/problem)
-There are *2 x N* nodes in an undirected graph, and a number of edges connecting some nodes. In each edge, the first value will be between 1 and N, inclusive. The second node will be between *N + 1* and *2 x N*, inclusive. Given a list of edges, determine the size of the smallest and largest connected components that have 2 or more nodes. A node can have any number of connections. The highest node value will always be connected to at least 1 other node.
 
-Note Single nodes should not be considered in the answer. 
+There are _2 x N_ nodes in an undirected graph, and a number of edges connecting some nodes. In each edge, the first value will be between 1 and N, inclusive. The second node will be between _N + 1_ and _2 x N_, inclusive. Given a list of edges, determine the size of the smallest and largest connected components that have 2 or more nodes. A node can have any number of connections. The highest node value will always be connected to at least 1 other node.
+
+Note Single nodes should not be considered in the answer.
 
 ```Java
     public static List<Integer> componentsInGraph(List<List<Integer>> gb) {
@@ -2394,24 +2576,26 @@ Note Single nodes should not be considered in the answer.
     }
 ```
 
-[Java Solution](week4/mock/componentsingraph/Solution.java) 
+[Java Solution](week4/mock/componentsingraph/Solution.java)
 
 ---
 
 #### [Cut the tree](https://www.hackerrank.com/challenges/cut-the-tree/problem)
+
 There is an undirected tree where each vertex is numbered from 1 to n, and each contains a data value. The sum of a tree is the sum of all its nodes' data values. If an edge is cut, two smaller trees are formed. The difference between two trees is the absolute value of the difference in their sums.
 
 Given a tree, determine which edge to cut so that the resulting trees have a minimal difference between them, then return that difference.
 
 Example
-*data = [1,2,3,4,5,6]*
-*edges = [(1,2),(1,3),(2,6),(3,4),(3,5)]*
+_data = [1,2,3,4,5,6]_
+_edges = [(1,2),(1,3),(2,6),(3,4),(3,5)]_
 
-In this case, node numbers match their weights for convenience. The graph is shown below. 
+In this case, node numbers match their weights for convenience. The graph is shown below.
 
 ![Alt text](resources/graph2.png)
 
-The values are calculated as follows: 
+The values are calculated as follows:
+
 ```
 Edge    Tree 1  Tree 2  Absolute
 Cut     Sum      Sum     Difference
@@ -2421,9 +2605,10 @@ Cut     Sum      Sum     Difference
 4        4         17        13
 5        5         16        11
 ```
+
 The minimum absolute difference is 3.
 
-Note: The given tree is always rooted at vertex 1. 
+Note: The given tree is always rooted at vertex 1.
 
 ```Java
     public static int cutTheTree(List<Integer> data, List<List<Integer>> edges) {
@@ -2480,8 +2665,3 @@ Note: The given tree is always rooted at vertex 1.
 [Java Solution](week4/mock/cutthetree/Solution.java)
 
 ---
-
-
-
-
-

@@ -1,5 +1,6 @@
 package dsa.sorting;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Random;
 
@@ -8,24 +9,36 @@ public class Sorting {
         int max = 100000;
         int[] items = new int[max];
 
-        for(int i = 0; i < max; i++)
-            items[i] = new Random().nextInt();        
+        for (int i = 0; i < max; i++)
+            items[i] = new Random().nextInt(max);
+
+        int[] bItems = Arrays.copyOf(items, max);
         long start = new Date().getTime();
-        BubbleSort.bubbleSort(items);
+        BubbleSort.bubbleSort(bItems);
         long end = new Date().getTime();
         System.out.println("BubbleSort: " + (end - start) + " ms.");
 
-        for(int i = 0; i < max; i++)
-            items[i] = new Random().nextInt();
+        int[] sItems = Arrays.copyOf(items, max);
         start = new Date().getTime();
-        QuickSort.quickSort(items, 0, items.length - 1);
+        SelectionSort.sort(sItems);
+        end = new Date().getTime();
+        System.out.println("SelectionSort: " + (end - start) + " ms.");
+
+        int[] iItems = Arrays.copyOf(items, max);
+        start = new Date().getTime();
+        InsertionSort.sort(iItems);
+        end = new Date().getTime();
+        System.out.println("InsertionSort: " + (end - start) + " ms.");
+
+        int[] qItems = Arrays.copyOf(items, max);
+        start = new Date().getTime();
+        QuickSort.quickSort(qItems, 0, qItems.length - 1);
         end = new Date().getTime();
         System.out.println("QuickSort: " + (end - start) + " ms.");
 
-        for(int i = 0; i < max; i++)
-            items[i] = new Random().nextInt();
+        int[] mItems = Arrays.copyOf(items, max);
         start = new Date().getTime();
-        MergeSort.mergeSort(items, 0, items.length - 1);
+        MergeSort.mergeSort(mItems, 0, mItems.length - 1);
         end = new Date().getTime();
         System.out.println("MergeSort: " + (end - start) + " ms.");
     }
