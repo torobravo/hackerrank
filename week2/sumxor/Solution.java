@@ -22,27 +22,24 @@ class Result {
      */
 
     public static long sumXor(long n) {
-        // Since (n + x) = (n OR X) = (n XOR x) except when both bits are 1
-        // n x n|x n^x n&x
-        // ----------------------
-        // 0 0 0 0 0
-        // 0 1 1 1 0
-        // 1 0 1 1 0
-        // 1 1 1 0 <--- 1
-        //
-        // The strategy is to only consider when (n OR x) = (n XOR x),
-        // and that only occurs when (n AND 1) == 0
-        // The way we do that is to loop through all bits and drop the right
-        // bit (right shift) in very iteration (n>>1). We count how many times
-        // the condition (n AND 1) == 0 is met.
-        // Finally we rise the counter to power of 2 to obtain the result.
-        // Why power of 2? Because we have 2 possible combination for very bit
-        // of n.
-        //
+        /*
+         * The equation n + x = n XOR X holds true when there are
+         * no carry-overs in the binary addition of n and x. This
+         * happens when n and x have not set bits in the same position.
+         * 
+         * 1. Identify Unset bits in n:
+         * * For each bit position in n, if the bit is 0, then
+         * * the corresponding bit in x can be 0 or 1.
+         * 
+         * 2. Count the number of Unset bits
+         * * The number of valid x is determined by the number of
+         * * unset (0) bits in n. If there are k unset bits, there are
+         * * 2^k possible values of x.
+         */
 
         int counter = 0;
         while (n > 0) {
-            if ((n & 1) == 0) // count only when n|x == n^x
+            if ((n & 1) == 0) // counts the number of unset bits (0)
                 counter++;
             n = n >> 1; // drop right-most digit (cut the number in half)
         }

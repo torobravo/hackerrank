@@ -24,15 +24,17 @@ class Result {
      */
 
     public static int sockMerchant(int n, List<Integer> ar) {
-        // Write your code here
+        Set<Integer> unmatched = new HashSet<>();
         int pairs = 0;
-        Collections.sort(ar);
-        for (int i = 1; i < n; i++) {
-            if (ar.get(i) == ar.get(i - 1)) {
+        for (int sock : ar) {
+            if (unmatched.contains(sock)) {
                 pairs++;
-                i++; // jump to next pair
+                unmatched.remove(sock);
+            } else {
+                unmatched.add(sock);
             }
         }
+
         return pairs;
     }
 
