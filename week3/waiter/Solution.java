@@ -46,6 +46,7 @@ class Result {
         for (int i = 0; i < q; i++) {
             Stack<Integer> tempA = new Stack<>();
             Stack<Integer> tempB = new Stack<>();
+
             while (!a.isEmpty()) {
                 int item = a.pop();
                 // Check if divisible by ith-prime
@@ -54,10 +55,13 @@ class Result {
                 else
                     tempA.push(item);
             }
-            a = tempA;
+
             // Move elements to answers
-            while (!tempB.isEmpty())
+            while (!tempB.isEmpty()) {
                 answers.add(tempB.pop());
+            }
+
+            a = tempA;
         }
         // Move remaining elements in A
         while (!a.isEmpty()) {

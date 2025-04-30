@@ -22,21 +22,21 @@ class Result {
      */
 
     public static String isBalanced(String s) {
-        Stack<Character> stack = new Stack<>();
-        String opening = "[{(";
-        String closing = "]})";
+        String OPEN = "{([";
+        String CLOSE = "})]";
 
-        for (Character b : s.toCharArray()) {
-            if (closing.indexOf(b) > -1) {
-                if (stack.isEmpty() || opening.charAt(closing.indexOf(b)) != stack.pop()) {
-                    return "NO";
-                }
+        Stack<Character> stack = new Stack<>();
+        for (Character c : s.toCharArray()) {
+            if (OPEN.indexOf(c) >= 0) {
+                stack.push(c);
             } else {
-                stack.push(b);
+
+                if (stack.empty() || OPEN.indexOf(stack.pop()) != CLOSE.indexOf(c))
+                    return "NO";
             }
         }
 
-        return stack.isEmpty() ? "YES" : "NO";
+        return stack.empty() ? "YES" : "NO";
     }
 
 }

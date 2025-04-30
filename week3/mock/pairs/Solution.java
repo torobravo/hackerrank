@@ -24,13 +24,17 @@ class Result {
      */
 
     public static int pairs(int k, List<Integer> arr) {
-        // let a, b in arr ==> a - b = k ==> a = b + k
+        Set<Integer> set = new HashSet<>();
         int cntr = 0;
-        Collections.sort(arr);
-        for (Integer num : arr) {
-            if (Collections.binarySearch(arr, num + k) >= 0) {
+
+        for (int num : arr) {
+            if (set.contains(num + k)) {
                 cntr++;
             }
+            if (set.contains(num - k)) {
+                cntr++;
+            }
+            set.add(num); // To avoid overcounts in case of duplicates
         }
 
         return cntr;

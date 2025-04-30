@@ -6,39 +6,34 @@ import java.util.*;
 public class Solution {
 
     public static void main(String[] args) {
-        /*
-         * Enter your code here. Read input from STDIN. Print output to STDOUT. Your
-         * class should be named Solution.
-         */
-        Stack<String> stack = new Stack<>();
-        StringBuilder textEditor = new StringBuilder();
         Scanner scanner = new Scanner(System.in);
+        Stack<String> history = new Stack<>();
+        StringBuilder S = new StringBuilder();
+
         int q = scanner.nextInt();
 
         while (q-- > 0) {
-            String op = scanner.next();
-            switch (op) {
-                case "1":
-                    stack.push(textEditor.toString());
-                    textEditor.append(scanner.next());
+
+            switch (scanner.nextInt()) {
+                case 1: // Append(W)
+                    history.push(S.toString());
+                    S.append(scanner.next());
                     break;
-                case "2":
-                    int k1 = scanner.nextInt();
-                    stack.push(textEditor.toString());
-                    textEditor.delete(textEditor.length() - k1, textEditor.length());
+                case 2: // Delete(k)
+                    history.push(S.toString());
+                    S.delete(S.length() - scanner.nextInt(), S.length());
                     break;
-                case "3":
-                    int k2 = scanner.nextInt();
-                    System.out.println(textEditor.charAt(k2 - 1));
+                case 3: // Print(k)
+                    System.out.println(S.charAt(scanner.nextInt() - 1));
                     break;
-                case "4":
-                    textEditor = new StringBuilder(stack.pop());
+                case 4: // Undo()
+                    S = new StringBuilder(history.pop());
                     break;
                 default:
-                    break;
             }
 
         }
+
         scanner.close();
     }
 }

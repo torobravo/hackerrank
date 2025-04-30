@@ -67,28 +67,27 @@ public class Solution {
      *
      */
     static SinglyLinkedListNode mergeLists(SinglyLinkedListNode head1, SinglyLinkedListNode head2) {
-        SinglyLinkedListNode pt1 = head1;
-        SinglyLinkedListNode pt2 = head2;
-        SinglyLinkedListNode merged = new SinglyLinkedListNode(-1);
-        SinglyLinkedListNode pt3 = merged;
+        SinglyLinkedListNode mergedList = new SinglyLinkedListNode(0);
+        SinglyLinkedListNode mPtr = mergedList;
 
-        while (pt1 != null && pt2 != null) {
-            if (pt1.data < pt2.data) {
-                pt3.next = new SinglyLinkedListNode(pt1.data);
-                pt1 = pt1.next;
+        while (head1 != null && head2 != null) {
+            if (head1.data < head2.data) {
+                mPtr.next = new SinglyLinkedListNode(head1.data);
+                head1 = head1.next;
             } else {
-                pt3.next = new SinglyLinkedListNode(pt2.data);
-                pt2 = pt2.next;
+                mPtr.next = new SinglyLinkedListNode(head2.data);
+                head2 = head2.next;
             }
-            pt3 = pt3.next;
+            mPtr = mPtr.next;
         }
 
-        if (pt1 != null)
-            pt3.next = pt1;
-        if (pt2 != null)
-            pt3.next = pt2;
+        if (head1 != null)
+            mPtr.next = head1;
 
-        return merged.next;
+        if (head2 != null)
+            mPtr.next = head2;
+
+        return mergedList.next;
     }
 
     private static final Scanner scanner = new Scanner(System.in);

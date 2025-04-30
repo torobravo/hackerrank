@@ -1162,28 +1162,27 @@ Given pointers to the heads of two sorted linked lists, merge them into a single
 
 ```Java
     static SinglyLinkedListNode mergeLists(SinglyLinkedListNode head1, SinglyLinkedListNode head2) {
-        SinglyLinkedListNode pt1 = head1;
-        SinglyLinkedListNode pt2 = head2;
-        SinglyLinkedListNode merged = new SinglyLinkedListNode(-1);
-        SinglyLinkedListNode pt3 = merged;
+        SinglyLinkedListNode mergedList = new SinglyLinkedListNode(0);
+        SinglyLinkedListNode mPtr = mergedList;
 
-        while (pt1 != null && pt2 != null) {
-            if (pt1.data < pt2.data) {
-                pt3.next = new SinglyLinkedListNode(pt1.data);
-                pt1 = pt1.next;
+        while(head1 != null && head2 != null) {
+            if (head1.data < head2.data) {
+                mPtr.next = new SinglyLinkedListNode(head1.data);
+                head1 = head1.next;
             } else {
-                pt3.next = new SinglyLinkedListNode(pt2.data);
-                pt2 = pt2.next;
+                mPtr.next = new SinglyLinkedListNode(head2.data);
+                head2 = head2.next;
             }
-            pt3 = pt3.next;
+            mPtr = mPtr.next;
         }
 
-        if (pt1 != null)
-            pt3.next = pt1;
-        if (pt2 != null)
-            pt3.next = pt2;
+        if (head1 != null)
+            mPtr.next = head1;
 
-        return merged.next;
+        if (head2 != null)
+            mPtr.next = head2;
+
+        return mergedList.next;
     }
 ```
 
@@ -1230,40 +1229,36 @@ In this challenge, you must first implement a queue using two stacks. Then proce
 
 ```Java
     public static void main(String[] args) {
-        Stack<String> s1 = new Stack<>();
-        Stack<String> s2 = new Stack<>();
-
+        Stack<Integer> s1 = new Stack<>();
+        Stack<Integer> s2 = new Stack<>();
         Scanner scanner = new Scanner(System.in);
         int q = scanner.nextInt();
-        scanner.nextLine();
-        for (int i = 0; i < q; i++) {
-            String line = scanner.nextLine();
-            String[] cmd = line.split("\\s");
 
-            switch (cmd[0]) {
-                case "1":
-                    s1.push(cmd[1]);
+        while (q-- > 0) {
+            switch (scanner.nextInt()) {
+                case 1:
+                    s1.push(scanner.nextInt());
                     break;
-                case "2":
+                case 2:
                     if (s2.isEmpty()) {
-                        while (!s1.isEmpty()) {
+                        while (!s1.empty()) {
                             s2.push(s1.pop());
                         }
                     }
                     s2.pop();
                     break;
-                case "3":
+                case 3:
                     if (s2.isEmpty()) {
-                        while (!s1.isEmpty()) {
+                        while (!s1.empty()) {
                             s2.push(s1.pop());
                         }
                     }
                     System.out.println(s2.peek());
                     break;
                 default:
-                    break;
             }
         }
+
         scanner.close();
     }
 ```
@@ -1289,20 +1284,21 @@ Given n strings of brackets, determine whether each sequence of brackets is bala
 
 ```Java
     public static String isBalanced(String s) {
-        Stack<Character> stack = new Stack<>();
-        String opening = "[{(";
-        String closing = "]})";
+        String OPEN = "{([";
+        String CLOSE = "})]";
 
-        for (Character b : s.toCharArray()) {
-            if (closing.indexOf(b) > -1) {
-                if (stack.isEmpty() || opening.charAt(closing.indexOf(b)) != stack.pop()) {
-                    return "NO";
-                }
+        Stack<Character> stack = new Stack<>();
+        for (Character c : s.toCharArray()) {
+            if (OPEN.indexOf(c) >= 0) {
+                stack.push(c);
             } else {
-                stack.push(b);
+
+                if (stack.empty() || OPEN.indexOf(stack.pop()) != CLOSE.indexOf(c))
+                    return "NO";
             }
         }
-        return stack.isEmpty() ? "YES" : "NO";
+
+        return stack.empty() ? "YES" : "NO";
     }
 ```
 
@@ -1337,6 +1333,7 @@ You are a waiter at a party. There is a pile of numbered plates. Create an empty
         for (int i = 0; i < q; i++) {
             Stack<Integer> tempA = new Stack<>();
             Stack<Integer> tempB = new Stack<>();
+
             while (!a.isEmpty()) {
                 int item = a.pop();
                 // Check if divisible by ith-prime
@@ -1345,15 +1342,19 @@ You are a waiter at a party. There is a pile of numbered plates. Create an empty
                 else
                     tempA.push(item);
             }
-            a = tempA;
+
             // Move elements to answers
-            while (!tempB.isEmpty())
+            while (!tempB.isEmpty()) {
                 answers.add(tempB.pop());
+            }
+
+            a = tempA;
         }
         // Move remaining elements in A
         while (!a.isEmpty()) {
             answers.add(a.pop());
         }
+
         return answers;
     }
 ```
@@ -1362,7 +1363,7 @@ You are a waiter at a party. There is a pile of numbered plates. Create an empty
 
 ---
 
-### [Simple Text Eidtor](https://www.hackerrank.com/challenges/one-month-preparation-kit-simple-text-editor/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-three)
+### [Simple Text Editor](https://www.hackerrank.com/challenges/one-month-preparation-kit-simple-text-editor/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-three)
 
 Implement a simple text editor. The editor initially contains an empty string, S. Perform Q operations of the following 4 types:
 
@@ -1373,34 +1374,34 @@ Implement a simple text editor. The editor initially contains an empty string, S
 
 ```Java
     public static void main(String[] args) {
-        Stack<String> stack = new Stack<>();
-        StringBuilder textEditor = new StringBuilder();
         Scanner scanner = new Scanner(System.in);
+        Stack<String> history = new Stack<>();
+        StringBuilder S = new StringBuilder();
+
         int q = scanner.nextInt();
 
         while (q-- > 0) {
-            String op = scanner.next();
-            switch (op) {
-                case "1":
-                    stack.push(textEditor.toString());
-                    textEditor.append(scanner.next());
+
+            switch (scanner.nextInt()) {
+                case 1: // Append(W)
+                    history.push(S.toString());
+                    S.append(scanner.next());
                     break;
-                case "2":
-                    int k1 = scanner.nextInt();
-                    stack.push(textEditor.toString());
-                    textEditor.delete(textEditor.length() - k1, textEditor.length());
+                case 2: // Delete(k)
+                    history.push(S.toString());
+                    S.delete(S.length() - scanner.nextInt(), S.length());
                     break;
-                case "3":
-                    int k2 = scanner.nextInt();
-                    System.out.println(textEditor.charAt(k2 - 1));
+                case 3: // Print(k)
+                    System.out.println(S.charAt(scanner.nextInt() - 1));
                     break;
-                case "4":
-                    textEditor = new StringBuilder(stack.pop());
+                case 4: // Undo()
+                    S = new StringBuilder(history.pop());
                     break;
                 default:
-                    break;
             }
+
         }
+
         scanner.close();
     }
 ```
@@ -1446,14 +1447,19 @@ Given an array of integers and a target value, determine the number of pairs of 
 
 ```Java
     public static int pairs(int k, List<Integer> arr) {
-        // let a, b in arr ==> a - b = k ==> a = b + k
+        Set<Integer> set = new HashSet<>();
         int cntr = 0;
-        Collections.sort(arr);
-        for (Integer num : arr) {
-            if (Collections.binarySearch(arr, num + k) >= 0) {
+
+        for (int num : arr) {
+            if (set.contains(num + k)) {
                 cntr++;
             }
+            if (set.contains(num - k)) {
+                cntr++;
+            }
+            set.add(num); // To avoid overcounts in case of duplicates
         }
+
         return cntr;
     }
 ```
